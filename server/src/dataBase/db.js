@@ -25,8 +25,13 @@ console.log(DB_URL_CONNECTION);
     if(existingUser.length === 0)
     {
         const user1 = new userModel({
+           name: "marlon yoel",
+           lastName: "esteban",
+           age: 25,
            email: "maryoe_95@hotmail.com",
-           password: "admin123"
+           password: "admin123",
+           admin: true,
+           products: []
         }) 
         user1.save()
     }
