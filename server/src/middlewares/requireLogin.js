@@ -2,26 +2,31 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 
 const user = mongoose.model('user')
-const {JWT_SECRET} = require('../config/config')
+const config = require('../config/config')
 
 module.exports = (req,res,next)=> {
-    const {authorization} = req.headers;
-    console.log("authorization require.login:",authorization);
     // authorization  === Bearer 4rtsdlkfjlkdf
-    if(!authorization){
+    // const {authorization} = req.headers();
+    const token = req.header('auth-token');
+    console.log("authorization require.login:",token);
+    //const token = authorization.replace("Bearer ", "");
+    
+    if(!token){
        console.log("not authorized");
        return res.status(401).json("No se encuentra loggeado");
     }
-    const token = authorization.replace("Bearer ", "");
-    jwt.verify(token, JWT_SECRET, (err, payload) => {
-        if(err){
-           return res.status(403).json("No se encuentra loggeado");
-        }
-        const {_id} = payload;
-        user.findById(_id)
-         .then(userdata=> {
-            req.user = userdata;
-            next();
-        })
-    })
+    try{
+       const verified= jwt.verify(token, config.module.JWT_SECRET)
+         req.user = verified;
+         next();
+        
+        // const {_id} = payload;
+        // user.findById(_id)
+        //  .then(userdata=> {
+        //     req.user = userdata;
+        // })
+    }
+    catch (error) {
+        return res.status(403).json("Token invalido");
+    }
 }
