@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt');
+const mongoose = require('mongoose')
 
 const { validate } = require('../models/user.model');
-const user = require('../models/user.model')
+const user = mongoose.model('user')
 
 exports.getUsers = async (req,res)=> {  
     const getUser = await user.find();
@@ -15,7 +16,9 @@ exports.createUser = async (req,res)=> {
     const salt = await bcrypt.genSalt(10);
     const passwordEncrypted = await bcrypt.hash(password, salt);
 
-    if(name, lastName, age, email, password){
+    if(!name || !lastName || !age || !email || !password){
+        res.status(404).json('Ingrese informacion válida');
+    }else{
         const validateUserExist = await user.findOne({email});
         
         if(validateUserExist){
@@ -34,7 +37,5 @@ exports.createUser = async (req,res)=> {
             res.status(201).json(newUser)
             console.log("se ha registrado un nuevo usuario");
         }
-    }else{
-        res.status(404).json('Ingrese informacion válida');
     }
 }
