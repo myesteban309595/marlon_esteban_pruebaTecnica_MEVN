@@ -26,6 +26,10 @@ const userSchema = mongoose.Schema({
         default: false
     },
     productos: [],
+    date: {
+        type: Date,
+        default: Date.now()
+    }
     
 })
 

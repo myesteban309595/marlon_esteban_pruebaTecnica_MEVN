@@ -2,12 +2,12 @@
 GET http://localhost:4040/user/ HTTP/1.1
 
 ###
-POST http://localhost:4040/user/ HTTP/1.1
+POST http://localhost:4040/user/registrar HTTP/1.1
 Content-Type:application/json
 
 {
     "name": "ingrid paola",
-    "lastName": "jimenez",
+    "lastName": "jimenez robles",
     "age": 25,
     "email": "ingrid@hotmail.com",
     "password": "admin123"

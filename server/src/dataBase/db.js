@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt');
+
 const config = require('../config/config');
 const userModel = require('../models/user.model');
 
@@ -24,12 +26,15 @@ console.log(DB_URL_CONNECTION);
 
     if(existingUser.length === 0)
     {
+      const salt = await bcrypt.genSalt(10);
+      const passwordEncrypted = await bcrypt.hash(config.module.ADMIN_PASSWORD, salt);
+
         const user1 = new userModel({
            name: "marlon yoel",
            lastName: "esteban",
            age: 25,
            email: "maryoe_95@hotmail.com",
-           password: "admin123",
+           password: passwordEncrypted,
            admin: true,
            products: []
         }) 

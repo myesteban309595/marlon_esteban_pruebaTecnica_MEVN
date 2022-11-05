@@ -1,7 +1,7 @@
 const express = require('express');
 const config = require('./config/config')
-require('./dataBase/db')
 const app = express();
+require('./dataBase/db')
 
 const PORT = config.module.PORT
 

@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const user = require('../models/user.model')
 
 exports.login = async (req,res)=> {
@@ -6,7 +7,8 @@ exports.login = async (req,res)=> {
     const validateEmail = await user.findOne({email:email});
     
     if(validateEmail){
-        if(validateEmail.password == password){
+        const validPassword = await bcrypt.compare(password, validateEmail.password)
+        if(validPassword){
             res.status(200).json("ingresado")
         }else{
             res.json("contraseña incorrecta");
