@@ -8,6 +8,7 @@ const product = require('../models/products.model')
 
 //crear un producto
 route.post('/createProduct',requireLogin, (req,res)=> {
+    console.log("req.user:", req.user);
     const {url, name, price} = req.body
     if(!url || !name || !price){
         return res.status(422).json("por favor ingrese campos válidos");
@@ -21,7 +22,7 @@ route.post('/createProduct',requireLogin, (req,res)=> {
         name: name,
         price: price,
         qualification: 0,
-        postedBy: req.user
+        postedBy: req.user._id
     })
 
     producto.save()
