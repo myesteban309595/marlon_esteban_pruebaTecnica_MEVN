@@ -19,8 +19,11 @@
           id="password"
           placeholder="Password"
         >
+        <p >
+          <a class="forgot-password" href="/forgotpassword">He olvidado mi contraseña</a>
+        </p>
         <p v-if="error" class="error">Has introducido mal el email o la contraseña.</p>
-        <input class="form-submit" type="submit" value="Login">
+        <button class="form-submit" type="submit" value="Login"> Login</button>
       </form>
       <p class="msg">¿No tienes cuenta?
         <a class="registrate" href="/register">Regístrate</a>
@@ -60,14 +63,14 @@
   }
   .title {
     margin-top: 0px;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
     text-align: center;
     color: #bd356e;
     font-family:'Times New Roman', Times, serif;
-    font-size:40px ;
+    font-size:36px ;
   }
   .form {
-    margin: 1rem auto;
+    margin: 0.8rem auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -103,20 +106,24 @@
     border: none;
     color: white;
     font-size: 15px;
-    margin-top: 3rem;
+    letter-spacing: 1px;
+    margin-top: 1rem;
     padding: 1rem 0;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: 0.2s;
     &:hover {
-      background: #0b6791;
+      background: #2786b3;
+      color: aliceblue;
+      box-shadow: 0 0 5px #14a9ff
     }
   }
+ 
   .error {
     margin: 1rem 0 0;
     color: #ff4a96;
   }
   .msg {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     text-align: center;
   }
   .registrate {
@@ -126,6 +133,17 @@
       color: #311ab1;
       box-shadow: 0 4px 10px 4px rgba(226, 93, 93, 0.3);
     }
+
+  }
+  .forgot-password {
+    margin-top: 10px;
+    color: white;
+    text-decoration: none;
+    &:hover {
+    color: #dbdd7e;
+    text-decoration:underline;
+    box-shadow: 0 4px 10px 4px rgba(151, 108, 108, 0.103);
+  }
   }
   </style>
   

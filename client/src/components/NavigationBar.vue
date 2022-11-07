@@ -1,13 +1,10 @@
 <template>
     <ul class="navigation-bar">
       <li>
-        <router-link to="/">Home</router-link>
+        <p class="info-navbar">No eres un cliente o emplead@ aún ?</p>
       </li>
       <li>
-        <router-link to="/login">Login</router-link>
-      </li>
-      <li>
-        <router-link to="/register">Register</router-link>
+        <button class="register-button" href="/registro">Registrarme</button>
       </li>
     </ul>
   </template>
@@ -18,18 +15,41 @@
   };
   </script>
   
-  <style scoped>
+  <style scoped lang="scss">
   ul {
     margin: 0;
     padding: 0;
   }
   li {
-    display: inline-block;
-    padding: 1em 5.5em;
+    display:inline-block;
+    padding: 1em 0.5em;
   }
 
   .navigation-bar {
+    display: flex;
+    justify-content: end;
+    align-items: center;
     margin-top: 0%;
-    background-color: cadetblue;
+    background-color: rgb(178, 224, 206);
   }
+  .register-button{
+    margin-right: 10px;
+    width: 130px;
+    height: 37px;
+    border-radius: 5px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    overflow: hidden;
+    background-color: cadetblue;
+    border:0px;
+    cursor: pointer;
+    transition: background 0.2s;
+    &:hover {
+      background: #2786b3;
+      color: aliceblue;
+      box-shadow: 0 0 15px #14a9ff
+    }
+  }
+  
   </style>

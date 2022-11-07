@@ -61,7 +61,7 @@ export default {
   width: 20%;
 }
 .hello-right{
-  background-color: rgb(19, 235, 152);
+  background-color: rgb(178, 224, 206);
   width: 80%;
 }
 .saludo{
