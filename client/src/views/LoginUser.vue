@@ -26,7 +26,7 @@
         <button class="form-submit" type="submit" value="Login"> Login</button>
       </form>
       <p class="msg">¿No tienes cuenta?
-        <a class="registrate" href="/register">Regístrate</a>
+        <a class="registrate" >Regístrate</a>
       </p>
     </div>
   </template>
@@ -52,6 +52,11 @@
           console.log(error);
         //   this.error = true;
         }
+      },
+      async registrate() {
+        console.log("GOLA MUNDO DESDE REGISTRATE");
+        this.$router.push("/");
+
       }
     }
   };
@@ -130,10 +135,8 @@
     color: #ff4a96;
     &:hover {
       outline: 0;
-      color: #311ab1;
-      box-shadow: 0 4px 10px 4px rgba(226, 93, 93, 0.3);
+      color: #6150c5;
     }
-
   }
   .forgot-password {
     margin-top: 10px;

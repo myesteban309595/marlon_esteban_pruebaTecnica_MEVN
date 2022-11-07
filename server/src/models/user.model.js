@@ -13,10 +13,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    age: {
-        type: Number,
-        require: true
-    },
     email: {
         type: String,
         require: true
@@ -29,7 +25,6 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    productos: [],
     date: {
         type: Date,
         default: Date.now()

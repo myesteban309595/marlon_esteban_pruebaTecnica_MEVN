@@ -1,6 +1,6 @@
 <template>
   <div class="hello-principal">
-    <div class="hello-left">
+    <!-- <div class="hello-left">
       <div>
         <img class="imageIcon-vue" alt="Vue logo" src="./assets/logo.png">
       </div>
@@ -14,19 +14,27 @@
       <navigation/>
       <p class="app-text">Prueba técnica One Gruop IT</p>
       <HelloWorld msg=""/>
-    </div>
+    </div> -->
+
+    <!-- probando el registro -->
+    <!-- <RegisterUser/> -->
+    <!-- probando al Home -->
+    <HomePage/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-import NavigationBar from './components/NavigationBar.vue'
+//import HelloWorld from './components/HelloWorld.vue'
+//import NavigationBar from './components/NavigationBar.vue'
 
+import HomePage from './views/HomePage.vue';
 export default {
   name: 'App',
   components: {
-    navigation: NavigationBar,
-    HelloWorld,
+   //navigation: NavigationBar,
+    //HelloWorld,
+    ////RegisterUser
+    HomePage,
   }
 }
 </script>

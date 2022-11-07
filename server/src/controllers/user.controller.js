@@ -11,12 +11,12 @@ exports.getUsers = async (req,res)=> {
 }
 
 exports.createUser = async (req,res)=> {
-    const {name,lastName, age, email, password} = req.body;
+    const {name,lastName, email, password} = req.body;
 
     const salt = await bcrypt.genSalt(10);
     const passwordEncrypted = await bcrypt.hash(password, salt);
 
-    if(!name || !lastName || !age || !email || !password){
+    if(!name || !lastName || !email || !password){
         res.status(404).json('Ingrese informacion válida');
     }else{
         const validateUserExist = await user.findOne({email});
@@ -27,10 +27,8 @@ exports.createUser = async (req,res)=> {
             const newUser = new user({
               name: name,
               lastName: lastName,
-              age: age,
               email: email,
               password: passwordEncrypted,
-              productos: []
             });
 
             newUser.save()

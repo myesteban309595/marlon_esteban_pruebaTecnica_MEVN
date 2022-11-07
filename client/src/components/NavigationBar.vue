@@ -4,14 +4,22 @@
         <p class="info-navbar">No eres un cliente o emplead@ aún ?</p>
       </li>
       <li>
-        <button class="register-button" href="/registro">Registrarme</button>
+        <button class="register-button" @click="registrate" href="/registro">Registrarme</button>
       </li>
     </ul>
   </template>
   
   <script>
+  import Swal from 'sweetalert2'
   export default {
-    name: "NavigationBar"
+    name: "NavigationBar",
+    methods: {
+      async registrate(){
+        console.log("hola desde registrarme");
+        Swal.fire("he dado click")
+        this.$router.push("/registro");
+      }
+    }
   };
   </script>
   
