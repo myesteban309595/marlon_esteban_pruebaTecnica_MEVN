@@ -3,27 +3,213 @@
       <div>
         <ServicesNavBar/>
       </div>
-      <div class="body-home">
+      <!-- <div class="body-home">
         <h1>HOLA DESDE HOME PAGE</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Correo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(user,index) in users" :key="index">
+              <td>{{user.url}}</td>
+              <td>{{user.lastName}}</td>
+              <td>{{user.email}}</td>
+              <button>boton</button>
+            </tr>
+          </tbody>
+        </table>
+      </div> -->
+      <div class="container-pages">
+        <div class="page-left">
+          <CreateProduct/>
+        </div>
+        <div class="page-right">
+          <div class="scroll-principal">   
+           <div class="products-container" v-for="(product,index) in products" :key="index">
+             <div class="productCard">
+               <p class="price"><strong> Precio: </strong> {{product.price +" $"}}</p>
+               <img class="image-list" :src="product.url" alt="">
+               <grid class="crud-format">
+                 <grid class="crud-format-productname">
+                   <p class="product-name">{{product.name}} </p>
+                 </grid>
+                 <grid class="crud-format-buttons">              
+                   <button id="edit" class="material-symbols-sharp">edit</button>
+                   <button id="delete" class="material-symbols-sharp" @click="deleteProduct(product._id)">delete</button>
+                 </grid>
+               </grid>
+               <p >{{product.qualification}}</p>
+             </div>
+           </div>
+          </div>
+        </div>
       </div>
     </div>
-</template>
+  </template>
 
 <script>
 import ServicesNavBar from '@/components/ServicesNavBar.vue';
+import axios from 'axios';
+import CreateProduct from '../components/CreateProduct.vue';
+import Swal from 'sweetalert2';
 
 export default {
     name: "App",
-    components: { 
-      ServicesNavBar 
+    components: {
+    ServicesNavBar,
+    CreateProduct
+},
+    data(){
+      return{
+        products: []
+      }
+    },
+    created(){
+      this.getProduct()
+    },
+    methods:{
+      getProduct(){
+        axios.get('http://localhost:4040/product/allproducts')
+        //.then(res => console.log(res))
+        .then(data=> {
+          console.log("estos:",data);
+          this.products = data.data.reverse()
+        })
+      },
+      deleteProduct(id){
+        Swal.fire({
+        title: "Eliminar producto",
+        text:"Desea eliminar este producto?",
+        confirmButtonText: "Eliminar",
+        confirmButtonColor: "#3085d6",
+        showCancelButton: true,
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+        }).then(({isConfirmed})=> {
+        if(isConfirmed){
+          axios.delete('http://localhost:4040/product/deleteproduct/'+id)
+        .then(data=> {
+          this.getProduct();
+          console.log("eliminar:",data);
+        })
+        .catch(error=> {
+          console.log(error);
+        })
+        }
+       })
+      }
     }
+
 };
 
 </script>
 
-<style>
-.home{
-  width: 100%;
+<style lang="scss" scoped>
+
+html,body{
+  margin: 0;
+  padding: 0;
 }
 
+body{
+  width: 100%;
+  height: 100%;
+  font-family: sans-serif;
+  letter-spacing: 0.03em;
+  line-height: 1.6;
+  color: azure;
+}
+
+.home{
+  background-color: rgb(232, 240, 250);
+}
+.scroll-principal{
+  height: 549px;
+ overflow-y: scroll;
+
+}
+.container-pages{
+  display: flex;
+}
+.price{
+  margin-top: 2px;
+  margin-bottom: 1px;
+  color:azure
+}
+.products-container{
+  width: 100%;
+  max-width: 1200px;
+  height: 430px;
+  display:inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+.products-container .productCard{
+  width: 300px;
+  height: 380px;
+  border-radius: 8px;
+  box-shadow: 0 2px 2px rgba(0,0,0,0.2);
+  overflow: hidden;
+  margin: 10px;
+  text-align: center;
+  transition: all 0.10s;
+  background-color: rgba(57, 153, 209, 0.966);
+  &:hover{
+    transform: translateY(-15px);
+    box-shadow: 0 12px 16px rgba(0,0,0,0.2);
+  }
+}
+.products-container .productCard img{
+  width: 300px;
+  height: 270px;
+}
+.product-name{
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 3px;
+  margin-bottom: 2px;
+}
+.page-right{
+  width: 50%;
+}
+.page-left{
+  width: 50%;
+}
+
+.crud-format{
+  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.crud-format-productname{
+  width: 70%;
+  margin-left: 8px;
+  display: flex;
+  justify-content: start;
+}
+.crud-format-buttons{
+  width: 30%;
+  margin-right: 5px;
+}
+#edit{
+  background-color: rgb(98, 98, 255);
+  &:hover{
+    background-color: rgb(72, 72, 253);
+  }
+}
+#delete{
+  margin-left: 3px;
+  background-color: rgb(252, 138, 138);
+  &:hover{
+    background-color: rgb(250, 109, 109);
+  }
+}
 </style>

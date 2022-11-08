@@ -11,6 +11,27 @@ export default {
   getUserLogged() {
     return Cookies.get("userLogged");
   },
+  // getAllProducts(){
+  //   return axios.get(`${ENDPOINT_PATH}/product/allproducts`)
+  //   .then()
+  //   .catch(()=>{
+
+  //   })
+  // },
+  // getMyProducts(){
+
+  // },
+  addProduct(name, price, qualification, url){
+    const product = {name, price, qualification, url}
+    console.log(product);
+    return axios.post(`${ENDPOINT_PATH}/product/createProduct`, product)
+    .then(
+      swal.fire("Se ha añadido un Nuevo producto")
+    )
+    .catch(error=> {
+      console.log(error);
+    })
+  },
   register(name, lastName,email, password) {
     const user = { name, lastName,email, password };
     console.log(user);
