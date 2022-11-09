@@ -9,8 +9,8 @@ const product = require('../models/products.model')
 //crear un producto
 route.post('/createProduct', (req,res)=> {
     //console.log("req.user:", req.user);
-    const {url, name, price} = req.body
-    if(!url || !name || !price){
+    const {url, name, price, qualification} = req.body
+    if(!url || !name || !price || !qualification){
         return res.status(422).json("por favor ingrese campos válidos");
     }
     //console.log("req.user:", req.user); // manda la info del usuario por el middleware y el token
@@ -19,15 +19,15 @@ route.post('/createProduct', (req,res)=> {
     
     const producto = new product({
         url: url,
-        name: name,
+        name: name.charAt(0).toUpperCase()+(name.slice(1)).toLowerCase(),
         price: price,
-        qualification: 0,
-       // postedBy: req.user._id
+        qualification: qualification,
+        //postedBy: postedBy
     })
 
     producto.save()
-    .then( result => {
-        res.json({product:result})
+    .then( data => {
+        res.json("Producto creado exitosamente")
     })
     .catch(err=> {
         console.log(err);
@@ -35,7 +35,7 @@ route.post('/createProduct', (req,res)=> {
 });
 
 // visualizar  mis productos
-route.get('/myProducts',requireLogin, (req,res)=> {
+route.get('/myProducts', (req,res)=> {
     console.log("req.user:", req.user);
 
     product.find({postedBy:req.user._id})

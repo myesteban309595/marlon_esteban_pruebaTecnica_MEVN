@@ -1,43 +1,67 @@
 <template>
     <div class="navbar-services" >
         <div class="navbar-services-left">
-            <p class="saludo-usuario"><strong>Bienvenid@</strong> {{"USUARIO"}}</p>
+            <p class="saludo-usuario"><strong>Bienvenid@</strong> {{token.name}}</p>
             <p class="material-symbols-sharp">person</p>
         </div>
         <div class="navbar-services-right">
+             <p v-if="administrator" >Administrador</p>
             <button @click="logout" id="logout" class="material-symbols-sharp">logOut</button>
         </div>
     </div>
 </template>
 <script>
+
+import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import VueJwtDecode from 'vue-jwt-decode'
+
 export default {
+    data(){
+      return{
+        token: VueJwtDecode.decode(Cookies.get("accessToken")),
+        administrator: false,
+      }
+    },
+    created(){
+      this.administrador()
+    },
     methods: {
         logout(){
-            Swal.fire({
-         icon: "question",
-         title: "Cerrar Sesión",
-         text: "¿Esta seguro que desea salir?",
-         confirmButtonText: "Aceptar",
-         confirmButtonColor: "#3085d6",
-         showCancelButton: true,
-         cancelButtonColor: "#d33",
-         cancelButtonText: "Cancelar",
-         background:"white"
-       }).then(({isConfirmed})=> {
-         if(isConfirmed){
-           window.location = '/';
+         Swal.fire({
+          icon: "question",
+          title: "Cerrar Sesión",
+          text: "¿Esta seguro que desea salir?",
+          confirmButtonText: "Aceptar",
+          confirmButtonColor: "#3085d6",
+          showCancelButton: true,
+          cancelButtonColor: "#d33",
+          cancelButtonText: "Cancelar",
+          background:"white"
+         }).then(({isConfirmed})=> {
+          if(isConfirmed){           
+           Cookies.remove('accessToken');
+           this.$router.push("/");
          }})
-       }
+        },
+        administrador(){
+          console.log("services token ", this.token);
+          this.token.admin === true ? this.administrator = true : this.administrator = false ;
+        }
     }
-}
+  }
 </script>
 
-
 <style lang="scss" scoped>
+p{
+  color: aliceblue;
+  letter-spacing: 0.8px;
+  font-size: 20px;
+  margin-right: 8px;
+}
 .navbar-services{
   height: 55px;  
-  background-color: rgb(232, 240, 250);
+  background: linear-gradient(to right, #8c959b, #2c445e);
   padding:2px;
   display: flex;
   justify-content: end;
@@ -45,7 +69,7 @@ export default {
 }
 .navbar-services-left{
   width: 50%;  
-  background-color: rgb(232, 240, 250);
+  background: transparent;
   padding:5px;
   display: flex;
   justify-content: start;
@@ -54,7 +78,7 @@ export default {
 }
 .navbar-services-right{
   width: 50%;  
-  background-color: rgb(232, 240, 250);
+  background-color:transparent;
   padding:5px;
   display: flex;
   justify-content: end;
@@ -67,12 +91,13 @@ export default {
     margin-left: 15px;
     border-radius: 8px;
     &:hover{
-        background-color: rgba(255, 94, 94, 0.849);
+        background-color:  #8c959b;
         cursor: pointer;
     }
 }
 .saludo-usuario{
     font-size: 25px;
+    color: aliceblue;
 }
 .material-symbols-sharp {
   margin-left: 10px;

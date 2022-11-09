@@ -1,22 +1,24 @@
-import Vue from 'vue'
-import Router from 'vue-router'
 
-//import App from './App'
-import HelloWorld from '../components/HelloWorld.vue'
-import LoginUser from '../views/LoginUser.vue'
-import RegisterUser from '../views/RegisterUser.vue'
+// import Vue from 'vue'
+// import VueRouter from 'vue-router'
 
-Vue.use(Router);
+// // import HelloWorld from '../components/HelloWorld.vue'
+// // import RegisterUser from '../views/RegisterUser.vue'
 
-const routes = [
-    {path: "/", component: HelloWorld},
-    {path: "/login", component: LoginUser},
-    {path: "/registro", component: RegisterUser},
-]
+// const Home = { template: '<div>Home</div>' }
+// const About = { template: '<div>About</div>' }
 
-const router = new Router({
-    mode: history,
-    routes
-})
+// //import HomePage from '../views/HomePage.vue'
 
-export default router;
+// const routes = [
+//     { path: '/', component: Home },
+//     { path: '/about', component: About },
+// ]
+// const router = new VueRouter({
+//     routes,
+//     mode: 'history'
+// })
+
+// Vue.use(VueRouter)
+
+// export default router;

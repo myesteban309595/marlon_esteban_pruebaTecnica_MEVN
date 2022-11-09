@@ -25,9 +25,9 @@ exports.createUser = async (req,res)=> {
             res.status(404).json('El usuario ya existe');
         }else{
             const newUser = new user({
-              name: name,
-              lastName: lastName,
-              email: email,
+              name: name.charAt(0).toUpperCase()+(name.slice(1)).toLowerCase(),
+              lastName: lastName.charAt(0).toUpperCase()+(name.slice(1)).toLowerCase(),
+              email: email.toLowerCase(),
               password: passwordEncrypted,
             });
 

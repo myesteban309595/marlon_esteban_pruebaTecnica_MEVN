@@ -87,15 +87,29 @@
   </script>
   
   <style lang="scss" scoped>
+  html,body{
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  width: 100%;
+  height: 100%;
+  font-family: sans-serif;
+  letter-spacing: 0.03em;
+  line-height: 1.6;
+  color: azure;
+}
   .register-principal {
     background-image: url("https://fondosmil.com/fondo/20893.jpg");
     width: 100%;
+    height: 100%;
     max-width: 100%;
     min-width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
+    padding: 0rem;
   }
 
   .title {
@@ -104,24 +118,27 @@
     text-align: center;
     color: #bd356e;
     font-family:'Times New Roman', Times, serif;
-    font-size:45px ;
+    font-size:40px ;
   }
     
   .form {
-    margin: 3rem auto;
+    height: 480px;
+    margin: 1.0rem auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     width: 20%;
-    min-width: 350px;
+    min-width: 310px;
     max-width: 100%;
+    max-height: 520px;
     background: rgba(19, 35, 47, 0.938);
     border-radius: 5px;
-    padding: 40px;
+    padding: 30px;
     box-shadow: 0 4px 10px 4px rgba(0, 0, 0, 0.3);
   }
   .form-label {
-    margin-top: 2rem;
+
+    margin-top: 1.5rem;
     color: white;
     margin-bottom: 0.5rem;
     &:first-of-type {

@@ -1,6 +1,7 @@
 <template>
     <div class="login">    
-      <h1 class="title">Agregar Producto</h1>
+      <h1 v-if="update ==null" class="title">Agregar Producto</h1>
+      <h1 v-if="update" class="title">Editar Producto</h1>
       <form action class="form" @submit.prevent="CreateProduct">
         <input
           v-model="name"
@@ -16,70 +17,112 @@
           type="text"
           id="price"
           placeholder="Precio"
-        >
-        <input
-          v-model="qualification"
-          class="form-input"
-          type="text"
-          id="calificacion"
-          placeholder="Calificacion"
-        >
+        >  
         <input
           v-model="url"
           class="form-input"
           type="text"
           id="url"
           placeholder="Url de la imagen"
-        >
+         >
+           <p class="clasificacion">
+            <input  v-model="qualification" id="radio1" type="radio" name="estrellas" value="5">
+          <label for="radio1" class="material-symbols-outlined" >star</label>
+          <input v-model="qualification" id="radio2" type="radio" name="estrellas" value="4">
+          <label for="radio2" class="material-symbols-outlined" >star</label>
+          <input v-model="qualification" id="radio3" type="radio" name="estrellas" value="3">
+          <label for="radio3" class="material-symbols-outlined" >star</label>
+          <input v-model="qualification"  id="radio4" type="radio" name="estrellas" value="2">
+          <label for="radio4" class="material-symbols-outlined" >star</label>
+          <input v-model="qualification" id="radio5" type="radio" name="estrellas" value="1">
+          <label for="radio5" class="material-symbols-outlined" >star</label>
+           </p>
         <!-- <p v-if="error" class="error">Has introducido mal el email o la contraseña.</p> -->
-        <button class="form-submit" type="submit" value="Login"> Registrar Producto</button>
+        <button v-if="update==null" class="form-submit" type="submit" value="value"> Registrar Producto</button>
+        <button v-if="update" class="form-submit" type="submit" value="value"> Editar Producto</button>
       </form>
     </div>
   </template>
   
   <script>
+
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import {getProduct} from '@/views/HomePage.vue';
- //import auth from "./CreateProduct.vue";
+import Cookies from 'js-cookie';
+import VueJwtDecode from 'vue-jwt-decode'
+
   export default {
+    props:{
+      update : null
+    },
+    components:{
+    },
     data: () => ({
       name: "",
       price: "",
       qualification: "",
-      url: ""
+      url: "",
+      tokenDecoded: VueJwtDecode.decode(Cookies.get('accessToken')),
     }),
-    components:{
-
-    },
-    //  created(){
-    //    getProduct()
-    //  },
     methods: {
       async CreateProduct() {
-        try {
-          const product = {
-            name: this.name,
-            price: this.price,
-            qualification: this.qualification,
-            url: this.url
-          };
-          await axios.post('http://localhost:4040/product/createProduct', product)
-          getProduct()
-          .then(
-          )
-          //   console.log(product);
-        //   this.$router.push("/");
-        } catch (error) {
-          console.log(error);
-          Swal.fire(error.request.statusText)
-        //   this.error = true;
+        if(this.update==null){
+          console.log("hola desde agregar producto");
+          console.log("valor update:", this.update);
+          console.log("valor estrella:", this.qualification);
+            const product = {
+              name: this.name,
+              price: this.price,
+              qualification: this.qualification,
+              url: this.url,
+              postedBy: this.tokenDecoded._id
+            }
+            await axios.post('http://localhost:4040/product/createProduct', product)
+            .then((data)=> {
+              Swal.fire({
+                icon: "success",
+                title: data.data,
+              })
+              .then((isConfirm)=> {
+                console.log(isConfirm);
+                location.reload()
+              })
+             .catch(error=> {
+                console.log(error);
+               Swal.fire(error.request.statusText)
+              })
+            });
+        }else{
+          console.log("hola desde else producto");
+          console.log("valor update:", this.update);
+           const product = {
+              name: this.name,
+              price: this.price,
+              qualification: this.qualification,
+              url: this.url,
+              postedBy: this.tokenDecoded._id
+             };
+            await axios.put(`http://localhost:4040/product/edit/${this.update._id}`, product)
+            .then((data)=> {
+              console.log("respuesta del put:", data);
+              Swal.fire({
+                icon: "success",
+                title: data.data,
+              })
+              .then((isConfirm)=> {
+                console.log(isConfirm);
+                location.reload()
+              })
+              // this.$emiter('escucharHijo', getProduct())
+            })
+            .catch (error=> {
+             console.log(error);
+           })
         }
       },
       async registrate() {
         console.log("GOLA MUNDO DESDE REGISTRATE");
         this.$router.push("/");
-
       }
     }
   };
@@ -89,11 +132,36 @@ import {getProduct} from '@/views/HomePage.vue';
   .login {
     padding: 0.5rem;
   }
+  input[type="radio"] {
+  display: none;
+}
+
+label {
+  margin-left: 5px;
+  color: grey;
+}
+
+.clasificacion {
+  display: flex;
+  justify-content: center;
+  direction: rtl;
+  unicode-bidi: bidi-override;
+}
+
+label:hover,
+label:hover ~ label {
+  color: orange;
+}
+
+input[type="radio"]:checked ~ label {
+  color: orange;
+}
+
   .title {
     margin-top: 0px;
     margin-bottom: 2px;
     text-align: center;
-    color: #bd356e;
+    color: rgba(19, 35, 47, 0.9);
     font-family:'Times New Roman', Times, serif;
     font-size:36px ;
   }
@@ -109,6 +177,7 @@ import {getProduct} from '@/views/HomePage.vue';
     border-radius: 5px;
     padding: 45px;
     box-shadow: 0 4px 10px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 4px;
   }
   
   .form-input {

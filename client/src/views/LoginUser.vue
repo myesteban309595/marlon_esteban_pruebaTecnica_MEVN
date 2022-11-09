@@ -23,16 +23,21 @@
           <a class="forgot-password" href="/forgotpassword">He olvidado mi contraseña</a>
         </p>
         <p v-if="error" class="error">Has introducido mal el email o la contraseña.</p>
-        <button class="form-submit" type="submit" value="Login"> Login</button>
+          <button class="form-submit" type="submit" value="Login"> Login</button>
       </form>
       <p class="msg">¿No tienes cuenta?
-        <a class="registrate" >Regístrate</a>
+        <router-link to="/registro" class="registrate" >Regístrate</router-link>
       </p>
     </div>
   </template>
   
   <script>
-//  import auth from "@/logic/auth";
+  //import auth from "@/utils/auth";
+  import axios from 'axios';
+  import Swal from 'sweetalert2';
+  import VueJwtDecode from 'vue-jwt-decode'
+  import Cookies from 'js-cookie';
+  
   export default {
     data: () => ({
       email: "",
@@ -42,22 +47,47 @@
     methods: {
       async login() {
         try {
-        //   await auth.login(this.email, this.password);
-        //   const user = {
-        //     email: this.email
-            //};
-        //   auth.setUserLogged(user);
-        //   this.$router.push("/");
-        } catch (error) {
+          const user = {
+            email:this.email, 
+            password:this.password
+          }
+          await axios.post('http://localhost:4040/login', user)
+          .then(({data}) => {
+            console.log(data);
+            const token = data.data.token
+            Cookies.set("accessToken", token);
+            const userData = VueJwtDecode.decode(token);
+            console.log("data en login:", userData.admin);
+            if(userData.admin === true){
+              Swal.fire({
+                title:'Bienvenido Administrador'
+              })
+              .then(({isConfirmed})=>{
+                console.log(isConfirmed);
+                this.$router.push("/homepage");
+              })
+              .catch(error=> {
+                console.log(error);
+              })
+            }else{
+              this.$router.push("/homepage");
+            }
+          })
+          .catch(error => {
+            console.log(error);
+            Swal.fire(error.response.data)
+          })
+         
+        }catch (error) {
           console.log(error);
         //   this.error = true;
         }
       },
       async registrate() {
         console.log("GOLA MUNDO DESDE REGISTRATE");
-        this.$router.push("/");
+        this.$router.push("/registro");
+      },
 
-      }
     }
   };
   </script>
@@ -80,7 +110,8 @@
     flex-direction: column;
     justify-content: center;
     width: 20%;
-    min-width: 350px;
+    height: 250px;
+    min-width: 280px;
     max-width: 100%;
     background: rgba(19, 35, 47, 0.9);
     border-radius: 5px;
@@ -139,6 +170,8 @@
     }
   }
   .forgot-password {
+    display: flex;
+    justify-content: center;
     margin-top: 10px;
     color: white;
     text-decoration: none;

@@ -6,11 +6,12 @@ const config = require('../config/config')
 
 module.exports = (req,res,next)=> {
     // authorization  === Bearer 4rtsdlkfjlkdf
-    // const {authorization} = req.headers();
-    const token = req.header('auth-token');
+     //const {authorization} = req.headers();
+    const token = req.header['auth-token'];
     console.log("authorization require.login:",token);
     //const token = authorization.replace("Bearer ", "");
-    
+    console.log("req.header:", req.header);
+    console.log("token:", token);
     if(!token){
        console.log("not authorized");
        return res.status(401).json("No se encuentra loggeado");
@@ -18,6 +19,7 @@ module.exports = (req,res,next)=> {
     try{
        const verified= jwt.verify(token, config.module.JWT_SECRET)
          req.user = verified;
+         console.log("req.user de requirelogin:", req.user);
          next();
         
         // const {_id} = payload;

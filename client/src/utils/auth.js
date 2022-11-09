@@ -5,7 +5,7 @@ import swal from 'sweetalert2';
 const ENDPOINT_PATH = "http://localhost:4040";
 
 export default {
-  setUserLogged(userLogged) {
+   setUserLogged(userLogged) {
     Cookies.set("userLogged", userLogged);
   },
   getUserLogged() {
@@ -42,7 +42,9 @@ export default {
         confirmButtonText: "¡ Genial !",
         confirmButtonColor: "#3085d6",
       }).then(({isConfirmed})=> {
-        if(isConfirmed){window.location = '/'}
+        if(isConfirmed){
+          this.$router.push("/");
+        }
        })
       )
     .catch (error => {
@@ -51,8 +53,19 @@ export default {
     })
     
   },
-  login(email, password) {
+  async login(email, password) {
     const user = { email, password };
-    return axios.post(ENDPOINT_PATH + "login", user);
+    return await axios.post(`${ENDPOINT_PATH}/login`, user)
+    .then(data => {
+      const token = data.data.token
+      console.log("token:", token);
+      console.log("data recibida del back:", data.status);
+      Cookies.set("accessToken", token);
+      //bienvenido usuario admin
+    })
+    .catch(error=> {
+      console.log("errorLogin:", error);
+      swal.fire(error.response.data)
+    })
   }
 };
