@@ -4,7 +4,7 @@ prueba tecnica fullstack MEVN
 # PRUEBA TECNICA DESARROLLADOR FULLSTACK
 
 ## Iniciando
-  para inicializar el proyecto ejecutamos:
+ * para inicializar el proyecto ejecutamos:
     _npm i
     
 ## debes definir las variables de entorno en un archivo .env en la carpeta raiz, con informacion de la base de datos
@@ -18,7 +18,7 @@ prueba tecnica fullstack MEVN
   
 ## ejecutar el cliente
 
-   *accedemos a la carpeta "client", una vez situacion en la ruta, ejecutamos el siguiente script:
+   * accedemos a la carpeta "client", una vez situacion en la ruta, ejecutamos el siguiente script:
    ```bash
    npm run serve
    ````
