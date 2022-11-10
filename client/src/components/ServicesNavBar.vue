@@ -6,6 +6,7 @@
         </div>
         <div class="navbar-services-right">
              <p v-if="administrator" >Administrador</p>
+             <p v-if="!administrator" >Cliente</p>
             <button @click="logout" id="logout" class="material-symbols-sharp">logOut</button>
         </div>
     </div>
@@ -45,7 +46,6 @@ export default {
          }})
         },
         administrador(){
-          console.log("services token ", this.token);
           this.token.admin === true ? this.administrator = true : this.administrator = false ;
         }
     }

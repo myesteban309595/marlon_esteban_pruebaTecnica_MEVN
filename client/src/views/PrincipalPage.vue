@@ -23,11 +23,22 @@
   import HelloWorld from '../components/HelloWorld.vue'
   import NavigationBar from '../components/NavigationBar.vue'
   
-  //import HomePage from './views/HomePage.vue';
+  import Cookies from 'js-cookie'
+
   export default {
     components: {
      navigation: NavigationBar,
       HelloWorld,
+    },
+    created(){
+      this.closeSession()
+    },
+    methods:{
+      closeSession(){
+        if(Cookies.remove('accessToken')){
+          Cookies.remove('accessToken')
+        }
+      }
     }
   }
   </script>

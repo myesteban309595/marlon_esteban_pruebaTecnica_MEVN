@@ -10,14 +10,11 @@
   </template>
   
   <script>
- // import Swal from 'sweetalert2'
   export default {
     name: "NavigationBar",
     methods: {
        async registrate(){
          this.$router.push("/registro");
-        console.log("hola desde registrarme");
-//Swal.fire("he dado click")
       }
     }
   };

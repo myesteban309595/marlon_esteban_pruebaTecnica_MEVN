@@ -3,7 +3,6 @@
       <div>
         <ServicesNavBar token/>
       </div>
-
       <div class="container-pages">
         <div v-if="adminUser" class="page-left">
           <UsersTableData/>
@@ -15,7 +14,6 @@
         </div>
         <div class="page-right">
           <div class="scroll-principal">   
-            <AwesomeVueStarRating :star="this.star" :disabled="this.disabled" :maxstars="this.maxstars" :starsize="this.starsize" :hasresults="this.hasresults" :hasdescription="this.hasdescription" :ratingdescription="this.ratingdescription"/>
            <div class="products-container" v-for="(product,index) in products" :key="index">
              <div class="productCard">
                <p class="price"><strong> Precio: </strong> {{product.price +" $"}}</p>
@@ -29,18 +27,13 @@
                    <button id="delete" class="material-symbols-sharp" @click="deleteProduct(product._id)">delete</button>
                   </grid>
                 </grid>
-                <p class="clasificacion">
-    <input  id="radio11" type="radio" name="estrellas" value="5">
-    <label v-if="(product.qualification == 1)" for="radio11">★</label>
-    <input  id="radio22" type="radio" name="estrellas" value="4">
-    <label  for="radio22">★</label>
-    <input  id="radio33" type="radio" name="estrellas" value="3">
-    <label  for="radio33">★</label>
-    <input  id="radio44" type="radio" name="estrellas" value="2">
-    <label  for="radio44">★</label>
-    <input  id="radio55" type="radio" name="estrellas" value="1">
-    <label   for="radio55">★</label>
-  </p>
+                  <p class="clasificacion">
+                   <label v-if="(product.qualification == 1)" for="radio11">★</label>
+                   <label v-if="(product.qualification == 2)" for="radio22">★★</label>
+                   <label v-if="(product.qualification == 3)" for="radio33">★★★</label>
+                   <label v-if="(product.qualification == 4)" for="radio44">★★★★</label>
+                   <label v-if="(product.qualification == 5)" for="radio55">★★★★</label>
+                  </p>
               </div>
             </div>
           </div>
@@ -69,18 +62,29 @@ export default {
          token: VueJwtDecode.decode(Cookies.get("accessToken")),
          products: [],
          updateProps : null,
-         adminUser : null
+         adminUser : null,
+         administrator: false,
        }
     },
     created(){
-      this.getProduct()
+      this.getProduct(),
+      this.administrador()
     },
     methods:{
       getProduct(){
-        axios.get('http://localhost:4040/product/allProducts')
-        //.then(res => console.log(res))
-        .then(data=> {
-          this.products = data.data.reverse()
+        axios.get('http://localhost:4040/product/myproducts', {
+          headers: {
+            authorization : Cookies.get('accessToken')
+          }
+        })
+        .then(({data})=> {
+          this.products = data.myproducts.reverse()
+        }).catch(error=> {
+          Swal.fire(error.response.data)
+          .then(() => {
+            Cookies.remove('accessToken')
+            this.$router.push("/")
+          })
         })
       },
       updateProduct(product){ 
@@ -107,7 +111,11 @@ export default {
         // imageAlt: 'Custom image',
         }).then(({isConfirmed})=> {
         if(isConfirmed){
-          axios.delete('http://localhost:4040/product/deleteproduct/'+id)
+          axios.delete('http://localhost:4040/product/deleteproduct/'+id,{
+          headers: {
+            authorization : Cookies.get('accessToken')
+          }
+        })
         .then(data=> {
           Swal.fire(
             '¡Eliminado!',
@@ -117,6 +125,8 @@ export default {
           console.log("eliminar:",data);
         })
         .catch(error=> {
+          Cookies.remove('accessToken')
+          this.$router.push("/")
           console.log(error);
         })
         }
@@ -127,33 +137,16 @@ export default {
       },
       adminP(){
         this.adminUser = null;
-      }
+      },
+      administrador(){
+        console.log(this.token);
+          this.token.admin === true ? this.administrator = true : this.administrator = false ;
+      },
    }
 }
 </script>
 
 <style lang="scss" scoped>
-
-
-.star {
-  width: 40px;
-    color: red;
-  }
-  .star.active {
-    width: 40px;
-    color: red;
-  }
-  .list, .list.disabled {
-    &:hover {
-      .star {
-        color: red !important;
-      }
-      .star.active {
-        width: 40px;
-        color: red;
-      }
-    }
-  }
 
   #form {
   width: 250px;
@@ -175,16 +168,12 @@ input[type="radio"] {
 
 label {
   color: grey;
+  color: orange;
 }
 
 .clasificacion {
   direction: rtl;
   unicode-bidi: bidi-override;
-}
-
-label:hover,
-label:hover ~ label {
-  color: orange;
 }
 
 input[type="radio"]:checked ~ label {
@@ -206,6 +195,7 @@ body{
 }
 
 .home{
+  width: 100%;
   background: linear-gradient(to right, #d4dbe0, #a8b6c5);
 }
 .scroll-principal{
@@ -214,10 +204,10 @@ body{
  overflow-y: scroll;
 }
 .container-pages{
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 .price{
   margin-top: 2px;

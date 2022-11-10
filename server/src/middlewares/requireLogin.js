@@ -5,28 +5,21 @@ const user = mongoose.model('user')
 const config = require('../config/config')
 
 module.exports = (req,res,next)=> {
-    // authorization  === Bearer 4rtsdlkfjlkdf
-     //const {authorization} = req.headers();
-    const token = req.header['auth-token'];
-    console.log("authorization require.login:",token);
-    //const token = authorization.replace("Bearer ", "");
-    console.log("req.header:", req.header);
-    console.log("token:", token);
-    if(!token){
-       console.log("not authorized");
+
+    const {authorization} = req.headers
+    const accessToken = authorization
+    if(!accessToken){
        return res.status(401).json("No se encuentra loggeado");
     }
     try{
-       const verified= jwt.verify(token, config.module.JWT_SECRET)
-         req.user = verified;
-         console.log("req.user de requirelogin:", req.user);
-         next();
-        
-        // const {_id} = payload;
-        // user.findById(_id)
-        //  .then(userdata=> {
-        //     req.user = userdata;
-        // })
+        jwt.verify(accessToken, process.env.JWT_SECRET, (err, user) => {
+         if(err){
+            res.send('Accedo Denegado, token expirado o incorrecto')
+         }else{
+            req.user = user;
+            next();
+         }
+       })
     }
     catch (error) {
         return res.status(403).json("Token invalido");

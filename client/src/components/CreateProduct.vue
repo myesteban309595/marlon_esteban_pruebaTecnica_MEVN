@@ -64,12 +64,12 @@ import VueJwtDecode from 'vue-jwt-decode'
       url: "",
       tokenDecoded: VueJwtDecode.decode(Cookies.get('accessToken')),
     }),
+    created(){
+      this.datos()
+    },
     methods: {
       async CreateProduct() {
         if(this.update==null){
-          console.log("hola desde agregar producto");
-          console.log("valor update:", this.update);
-          console.log("valor estrella:", this.qualification);
             const product = {
               name: this.name,
               price: this.price,
@@ -77,8 +77,12 @@ import VueJwtDecode from 'vue-jwt-decode'
               url: this.url,
               postedBy: this.tokenDecoded._id
             }
-            await axios.post('http://localhost:4040/product/createProduct', product)
-            .then((data)=> {
+            await axios.post('http://localhost:4040/product/createProduct', product, {
+              headers: {
+                 authorization : Cookies.get('accessToken')
+               }
+              })
+             .then((data)=> {
               Swal.fire({
                 icon: "success",
                 title: data.data,
@@ -93,8 +97,6 @@ import VueJwtDecode from 'vue-jwt-decode'
               })
             });
         }else{
-          console.log("hola desde else producto");
-          console.log("valor update:", this.update);
            const product = {
               name: this.name,
               price: this.price,
@@ -102,9 +104,12 @@ import VueJwtDecode from 'vue-jwt-decode'
               url: this.url,
               postedBy: this.tokenDecoded._id
              };
-            await axios.put(`http://localhost:4040/product/edit/${this.update._id}`, product)
+            await axios.put(`http://localhost:4040/product/edit/${this.update._id}`, product,{
+            headers: {
+                authorization : Cookies.get('accessToken')
+             }
+            })
             .then((data)=> {
-              console.log("respuesta del put:", data);
               Swal.fire({
                 icon: "success",
                 title: data.data,
@@ -120,9 +125,11 @@ import VueJwtDecode from 'vue-jwt-decode'
            })
         }
       },
-      async registrate() {
-        console.log("GOLA MUNDO DESDE REGISTRATE");
-        this.$router.push("/");
+      async datos(){
+         this.name = this.update != null ? this.update.name : "",
+         this.price= this.update != null ? this.update.price : "",
+         this.qualification= this.update != null ? this.update.qualification : "",
+         this.url= this.update != null ? this.update.url : "" 
       }
     }
   };
@@ -216,13 +223,6 @@ input[type="radio"]:checked ~ label {
   .msg {
     margin-top: 1.5rem;
     text-align: center;
-  }
-  .registrate {
-    color: #ff4a96;
-    &:hover {
-      outline: 0;
-      color: #6150c5;
-    }
   }
   .forgot-password {
     margin-top: 10px;

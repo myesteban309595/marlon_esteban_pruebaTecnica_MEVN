@@ -1,13 +1,11 @@
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose')
 
-const { validate } = require('../models/user.model');
-const user = mongoose.model('user')
+const user = require('../models/user.model')
 
 exports.getUsers = async (req,res)=> {  
     const getUser = await user.find();
     res.json(getUser)
-    console.log("se han obtenido todos los usuarios");
 }
 
 exports.createUser = async (req,res)=> {
@@ -20,7 +18,6 @@ exports.createUser = async (req,res)=> {
         res.status(404).json('Ingrese informacion válida');
     }else{
         const validateUserExist = await user.findOne({email});
-        
         if(validateUserExist){
             res.status(404).json('El usuario ya existe');
         }else{
@@ -30,10 +27,28 @@ exports.createUser = async (req,res)=> {
               email: email.toLowerCase(),
               password: passwordEncrypted,
             });
-
             newUser.save()
             res.status(201).json(newUser)
-            console.log("se ha registrado un nuevo usuario");
         }
     }
 }
+
+exports.editUser = async (req, res) => {
+    try{
+        const {_id} = req.params
+        const updatedUser = await user.updateOne({_id:_id}, req.body)
+        .then(()=>res.json("Usuario actualizado"))
+    } catch(error) {
+        res.json({message: error.message})
+    }
+};
+
+exports.deleteUser = async (req, res) => {
+    try{
+        const {id} = req.params
+      await user.deleteOne({_id:id})
+        .then(()=> res.json("Se ha eliminado el usuario"))
+    } catch(error) {
+        res.json({message: error.message})
+    }
+};

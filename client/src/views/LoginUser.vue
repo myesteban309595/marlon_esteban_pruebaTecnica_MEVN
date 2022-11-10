@@ -26,7 +26,7 @@
           <button class="form-submit" type="submit" value="Login"> Login</button>
       </form>
       <p class="msg">¿No tienes cuenta?
-        <router-link to="/registro" class="registrate" >Regístrate</router-link>
+        <a @click="registrate" class="registrate" >Regístrate</a>
       </p>
     </div>
   </template>
@@ -53,11 +53,9 @@
           }
           await axios.post('http://localhost:4040/login', user)
           .then(({data}) => {
-            console.log(data);
             const token = data.data.token
             Cookies.set("accessToken", token);
             const userData = VueJwtDecode.decode(token);
-            console.log("data en login:", userData.admin);
             if(userData.admin === true){
               Swal.fire({
                 title:'Bienvenido Administrador'
@@ -80,14 +78,11 @@
          
         }catch (error) {
           console.log(error);
-        //   this.error = true;
         }
       },
       async registrate() {
-        console.log("GOLA MUNDO DESDE REGISTRATE");
         this.$router.push("/registro");
       },
-
     }
   };
   </script>

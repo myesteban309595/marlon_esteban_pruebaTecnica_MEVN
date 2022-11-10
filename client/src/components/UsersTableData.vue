@@ -14,8 +14,8 @@
                   <td>{{user.name}}</td>
                   <td>{{user.lastName}}</td>
                   <td>{{user.email}}</td>
-                  <button id="edit" class="material-symbols-sharp">edit</button>
-                  <button id="delete" class="material-symbols-sharp">delete</button>
+                  <button id="edit" class="material-symbols-sharp" @click="updateUser(user._id)">edit</button>
+                  <button id="delete" class="material-symbols-sharp" @click="deleteUser(user._id)">delete</button>
                 </tr>
               </tbody>
             </table>
@@ -39,7 +39,29 @@ export default{
             .then(data=> {
                 this.users = data.data
                 console.log(data);
-            })
+            }).catch(error=> {
+              console.log(error);
+            });
+        },
+        async deleteUser(id){
+          axios.delete(`http://localhost:4040/user/${id}`)
+          .then(data=> {
+            console.log(data);
+          }).catch(error=> {
+              console.log("hola desde dele user front");
+              console.log(error);
+            });
+        },
+        updateUser(id){
+          const updatedUser = {
+
+          }
+          axios.put(`http://localhost:4040/user/edit/${id}`,updatedUser)
+            .then(data=> {
+                console.log(data);
+            }).catch(error=> {
+              console.log(error);
+            });
         }
     }
 }
@@ -57,17 +79,15 @@ export default{
     padding: 3px;
 }
 .scroll-users{
-  display: flex;
-  justify-content: center;
-  align-items: center;
   margin-top: 10px;
-  width: 90%;
+  
+  width: 95%;
   height: 380px;
   overflow-y: scroll;
 
 }
 table {
-   width: 90%;
+   width: 95%;
    border: 1px solid rgb(218, 217, 230);
    text-align: left;
    border-collapse: collapse;
@@ -77,6 +97,7 @@ table {
    background-color:rgba(19, 35, 47, 0.9);
    box-shadow: 0 4px 10px 4px rgba(0, 0, 0, 0.3);
    border-radius: 5px;
+   margin-bottom: 0px;
 }
 caption, td, th {
    padding: 0.3em;
@@ -93,7 +114,7 @@ caption {
    font-style: italic;
 }
 #edit{
-  margin-left: 25px;
+  margin-left: 40px;
   margin-top: 6px;
   margin-bottom: 5px;
   border-radius: 7px;
@@ -106,7 +127,7 @@ caption {
 #delete{
 
   border-radius: 7px;
-  margin-left: 4px;
+  margin-left: 10px;
   background-color: rgb(255, 162, 162);
   &:hover{
     cursor: pointer;

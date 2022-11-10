@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { Axios } from "axios";
 import Cookies from "js-cookie";
 import swal from 'sweetalert2';
 
@@ -9,18 +9,18 @@ export default {
     Cookies.set("userLogged", userLogged);
   },
   getUserLogged() {
-    return Cookies.get("userLogged");
+    return Cookies.get("accessToken");
   },
-  // getAllProducts(){
-  //   return axios.get(`${ENDPOINT_PATH}/product/allproducts`)
-  //   .then()
-  //   .catch(()=>{
-
-  //   })
-  // },
-  // getMyProducts(){
-
-  // },
+ initAxiosInterceptors(){
+  Axios.interceptors.request.use(function(config){
+    const token =Cookies.get('accessToken');
+    console.log(token);
+    if(token){
+      config.headers.Authorization = `bearer ${token}`
+    }
+    return config;  
+  })
+ },
   addProduct(name, price, qualification, url){
     const product = {name, price, qualification, url}
     console.log(product);
@@ -34,7 +34,6 @@ export default {
   },
   register(name, lastName,email, password) {
     const user = { name, lastName,email, password };
-    console.log(user);
     return axios.post(`${ENDPOINT_PATH}/user/registrar`, user)
     .then(
       swal.fire({
@@ -58,13 +57,9 @@ export default {
     return await axios.post(`${ENDPOINT_PATH}/login`, user)
     .then(data => {
       const token = data.data.token
-      console.log("token:", token);
-      console.log("data recibida del back:", data.status);
-      Cookies.set("accessToken", token);
-      //bienvenido usuario admin
+      console.log(token);
     })
     .catch(error=> {
-      console.log("errorLogin:", error);
       swal.fire(error.response.data)
     })
   }

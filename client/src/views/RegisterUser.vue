@@ -54,7 +54,8 @@
   
   <script>
   import Swal from 'sweetalert2'
-  import auth from "@/utils/auth.js";
+  import axios from 'axios';
+  import Cookies from 'js-cookie';
 
   export default {
     data: () => ({
@@ -68,8 +69,32 @@
       async register() {
         try {
           if(this.password === this.passwordRepeat){
-            await auth.register(this.name, this.lastName,this.email, this.password);
-            this.$router.push("/");
+            const user = {
+              name: this.name, 
+              lastName: this.lastName,
+              email: this.email, 
+              password: this.password
+            }
+            await axios.post('http://localhost:4040/user/registrar',user,{
+            headers: {
+                authorization : Cookies.get('accessToken')
+             }
+            })
+            .then(
+              Swal.fire({
+                icon: 'success',
+                title: "Registro Exitoso",
+                confirmButtonText: "Aceptar",
+                confirmButtonColor: "#3085d6",
+              })
+              .then((confirm)=>{
+                console.log(confirm);
+                this.$router.push("/")
+              })
+              )
+              .catch(error=> {
+              console.log(error);
+              }) 
           }else{
             Swal.fire({
               icon: "warning",
@@ -77,6 +102,7 @@
                confirmButtonText: "Entendido",
                confirmButtonColor: "#3085d6",
             })
+          
           }
         } catch (error) {
           console.log(error);

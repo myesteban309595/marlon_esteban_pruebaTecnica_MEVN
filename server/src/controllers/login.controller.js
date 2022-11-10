@@ -21,16 +21,13 @@ exports.login = async (req,res)=> {
             }
             bcrypt.compare(password, savedUser.password)
             .then(doMatch=>{
-             console.log("savedUser", savedUser);
             if(doMatch){
                 const token = jwt.sign({
                     _id: savedUser._id,
                     name: savedUser.name,
                     admin: savedUser.admin
-                }, config.module.JWT_SECRET, {expiresIn:"2h"});
-                //let dataUser = {...savedUser._doc, token}
+                },process.env.JWT_SECRET);
                 res.header('auth-token', token).json({data: {token}});  
-                //res.status(200).json({...dataUser, token});
             }else {
                 return res.status(422).json("Correo o contraseña incorrectos");
             }

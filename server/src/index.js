@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan')
 const cors = require('cors');
+const expressJwt = require('express-jwt');
 
 const config = require('./config/config')
 const app = express();
