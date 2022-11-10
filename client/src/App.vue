@@ -5,9 +5,6 @@
 </template>
 
 <script>
-// import initAxiosInterceptors from './utils/auth.js';
-// initAxiosInterceptors();
-
 export default {
   name: 'App',
   components: {

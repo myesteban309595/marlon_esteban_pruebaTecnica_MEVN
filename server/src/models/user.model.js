@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
     photo:{
         type: String,
-        default: "no photo"
+        default: "https://sirinc2.org/branch129/wp-content/uploads/2019/04/no-photo-icon-22.png"
     },
     name: {
         type: String,

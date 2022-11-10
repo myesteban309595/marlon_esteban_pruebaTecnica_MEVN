@@ -6,11 +6,11 @@
       <div class="container-pages">
         <div v-if="adminUser" class="page-left">
           <UsersTableData/>
-          <button @click="adminP" class="admP" >Administrar Productos</button>
+          <button v-if="administrator" @click="adminP" class="admP" >Administrar Productos</button>
         </div>
         <div v-if="adminUser==null" class="page-left">
           <CreateProduct :update="updateProps" @escucharHijo="getProduct()"></CreateProduct>
-          <button @click="adminU" class="admU">Administrar Usuarios</button>
+          <button v-if="administrator" @click="adminU" class="admU">Administrar Usuarios</button>
         </div>
         <div class="page-right">
           <div class="scroll-principal">   
@@ -32,7 +32,7 @@
                    <label v-if="(product.qualification == 2)" for="radio22">★★</label>
                    <label v-if="(product.qualification == 3)" for="radio33">★★★</label>
                    <label v-if="(product.qualification == 4)" for="radio44">★★★★</label>
-                   <label v-if="(product.qualification == 5)" for="radio55">★★★★</label>
+                   <label v-if="(product.qualification == 5)" for="radio55">★★★★★</label>
                   </p>
               </div>
             </div>
@@ -51,6 +51,8 @@ import Cookies from 'js-cookie';
 import VueJwtDecode from 'vue-jwt-decode'
 import UsersTableData from '@/components/UsersTableData.vue';
 
+import { API } from '../constants/constants';
+
 export default {
     components: {
     ServicesNavBar,
@@ -64,15 +66,19 @@ export default {
          updateProps : null,
          adminUser : null,
          administrator: false,
+         API_HOST_BACKEND : API.API_HOST_BACKEND
        }
     },
     created(){
       this.getProduct(),
       this.administrador()
     },
+    mounted(){
+      console.log("API_HOST_BACKEND", this.API_HOST_BACKEND);
+    },
     methods:{
       getProduct(){
-        axios.get('http://localhost:4040/product/myproducts', {
+        axios.get(`${this.API_HOST_BACKEND}/product/myproducts`, {
           headers: {
             authorization : Cookies.get('accessToken')
           }
@@ -111,7 +117,7 @@ export default {
         // imageAlt: 'Custom image',
         }).then(({isConfirmed})=> {
         if(isConfirmed){
-          axios.delete('http://localhost:4040/product/deleteproduct/'+id,{
+          axios.delete(`${this.API_HOST_BACKEND}/product/deleteproduct/${id}`,{
           headers: {
             authorization : Cookies.get('accessToken')
           }
@@ -280,19 +286,19 @@ body{
 }
 #edit{
   border-radius: 7px;
-  background-color: rgb(98, 98, 255);
+  background-color: rgb(167, 167, 241);
   &:hover{
     cursor: pointer;
-    background-color: rgb(72, 72, 253);
+    background-color: rgb(117, 117, 252);
   }
 }
 #delete{
   border-radius: 7px;
   margin-left: 3px;
-  background-color: rgb(252, 138, 138);
+  background-color: rgb(252, 177, 177);
   &:hover{
     cursor: pointer;
-    background-color: rgb(250, 109, 109);
+    background-color: rgb(255, 129, 129);
   }
 }
 

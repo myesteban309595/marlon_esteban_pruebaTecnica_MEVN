@@ -6,6 +6,6 @@ const {getUsers, createUser, deleteUser, editUser} = require('../controllers/use
 route.get('/', getUsers);  
 route.post('/registrar', createUser);
 route.delete('/:id', deleteUser);
-route.put('/edit', editUser);
+route.put('/:id', editUser);
 
 module.exports = route

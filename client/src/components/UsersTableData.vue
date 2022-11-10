@@ -14,7 +14,7 @@
                   <td>{{user.name}}</td>
                   <td>{{user.lastName}}</td>
                   <td>{{user.email}}</td>
-                  <button id="edit" class="material-symbols-sharp" @click="updateUser(user._id)">edit</button>
+                  <button id="edit" class="material-symbols-sharp" @click="getUserPhoto(user.photo, user.name, user.lastName, user.admin)">account_circle</button>
                   <button id="delete" class="material-symbols-sharp" @click="deleteUser(user._id)">delete</button>
                 </tr>
               </tbody>
@@ -25,17 +25,24 @@
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import Cookies from 'js-cookie'
+import { API } from '../constants/constants';
 
 export default{
     data:()=>({
-        users :[]
+        users :[],
+        API_HOST_BACKEND: API.API_HOST_BACKEND
     }),   
     created(){
       this.getUsers()
     },
     methods:{
         async getUsers(){
-            axios.get('http://localhost:4040/user')
+            axios.get(`${this.API_HOST_BACKEND}/user`, {
+        headers: {
+            authorization : Cookies.get('accessToken')
+          }})
             .then(data=> {
                 this.users = data.data
                 console.log(data);
@@ -44,24 +51,27 @@ export default{
             });
         },
         async deleteUser(id){
-          axios.delete(`http://localhost:4040/user/${id}`)
+          axios.delete(`${this.API_HOST_BACKEND}/user/${id}`, {
+        headers: {
+            authorization : Cookies.get('accessToken')
+          }})
           .then(data=> {
+            this.getUsers()
             console.log(data);
           }).catch(error=> {
-              console.log("hola desde dele user front");
+              this.getUsers()
               console.log(error);
             });
         },
-        updateUser(id){
-          const updatedUser = {
-
-          }
-          axios.put(`http://localhost:4040/user/edit/${id}`,updatedUser)
-            .then(data=> {
-                console.log(data);
-            }).catch(error=> {
-              console.log(error);
-            });
+        getUserPhoto(photo, name, lastName, admin){
+          Swal.fire({
+            title: admin == true ? "Admin" : "Cliente",
+            text: `${name} ${lastName}`,
+            imageUrl: photo,
+            imageWidth: 250,
+            imageHeight: 200,
+            imageAlt: 'Custom image',
+           })
         }
     }
 }
@@ -79,8 +89,8 @@ export default{
     padding: 3px;
 }
 .scroll-users{
-  margin-top: 10px;
-  
+  margin-top: 15px;
+  margin-bottom: 10px;
   width: 95%;
   height: 380px;
   overflow-y: scroll;
@@ -100,7 +110,7 @@ table {
    margin-bottom: 0px;
 }
 caption, td, th {
-   padding: 0.3em;
+   padding: 1.1em;
 }
 th, td {
     margin: 2px;
@@ -114,21 +124,21 @@ caption {
    font-style: italic;
 }
 #edit{
-  margin-left: 40px;
+  margin-left: 20px;
   margin-top: 6px;
   margin-bottom: 5px;
   border-radius: 7px;
-  background-color: rgb(131, 131, 255);
+  background-color: rgb(167, 167, 241);
   &:hover{
     cursor: pointer;
-    background-color: rgb(72, 72, 253);
+    background-color: rgb(117, 117, 252);
   }
 }
 #delete{
 
   border-radius: 7px;
-  margin-left: 10px;
-  background-color: rgb(255, 162, 162);
+  margin-left: 7px;
+  background-color: rgb(252, 177, 177);
   &:hover{
     cursor: pointer;
     background-color: rgb(255, 129, 129);

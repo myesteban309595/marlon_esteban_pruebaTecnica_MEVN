@@ -37,21 +37,27 @@
   import Swal from 'sweetalert2';
   import VueJwtDecode from 'vue-jwt-decode'
   import Cookies from 'js-cookie';
-  
+  import { API } from '../constants/constants';
+
   export default {
     data: () => ({
       email: "",
       password: "",
-      error: false
+      error: false,
+      API_HOST_BACKEND : API.API_HOST_BACKEND
     }),
+    mounted(){
+      console.log("proebando",this.API_HOST_BACKEND);
+    },
     methods: {
       async login() {
         try {
+          const API_HOST_BACKEND = this.API_HOST_BACKEND
           const user = {
             email:this.email, 
             password:this.password
-          }
-          await axios.post('http://localhost:4040/login', user)
+           }
+          await axios.post(`${API_HOST_BACKEND}/login`, user)
           .then(({data}) => {
             const token = data.data.token
             Cookies.set("accessToken", token);

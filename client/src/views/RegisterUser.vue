@@ -57,13 +57,16 @@
   import axios from 'axios';
   import Cookies from 'js-cookie';
 
+  import { API } from '../constants/constants';
+
   export default {
     data: () => ({
       name: "",
       lastName: "",
       email: "",
       password: "",
-      passwordRepeat: ""
+      passwordRepeat: "",
+      API_HOST_BACKEND :API.API_HOST_BACKEND
     }),
     methods: {
       async register() {
@@ -75,7 +78,7 @@
               email: this.email, 
               password: this.password
             }
-            await axios.post('http://localhost:4040/user/registrar',user,{
+            await axios.post(`${this.API_HOST_BACKEND}/user/registrar`,user,{
             headers: {
                 authorization : Cookies.get('accessToken')
              }

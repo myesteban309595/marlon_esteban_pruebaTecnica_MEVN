@@ -51,6 +51,8 @@ import Swal from 'sweetalert2';
 import Cookies from 'js-cookie';
 import VueJwtDecode from 'vue-jwt-decode'
 
+import { API } from '../constants/constants';
+
   export default {
     props:{
       update : null
@@ -63,6 +65,7 @@ import VueJwtDecode from 'vue-jwt-decode'
       qualification: "",
       url: "",
       tokenDecoded: VueJwtDecode.decode(Cookies.get('accessToken')),
+      API_HOST_BACKEND: API.API_HOST_BACKEND
     }),
     created(){
       this.datos()
@@ -77,7 +80,7 @@ import VueJwtDecode from 'vue-jwt-decode'
               url: this.url,
               postedBy: this.tokenDecoded._id
             }
-            await axios.post('http://localhost:4040/product/createProduct', product, {
+            await axios.post(`${this.API_HOST_BACKEND}/product/createProduct`, product, {
               headers: {
                  authorization : Cookies.get('accessToken')
                }
@@ -104,7 +107,7 @@ import VueJwtDecode from 'vue-jwt-decode'
               url: this.url,
               postedBy: this.tokenDecoded._id
              };
-            await axios.put(`http://localhost:4040/product/edit/${this.update._id}`, product,{
+            await axios.put(`${this.API_HOST_BACKEND}/product/edit/${this.update._id}`, product,{
             headers: {
                 authorization : Cookies.get('accessToken')
              }

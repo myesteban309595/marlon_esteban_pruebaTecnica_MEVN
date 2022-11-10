@@ -1,6 +1,7 @@
 <template>
     <div class="navbar-services" >
         <div class="navbar-services-left">
+            <img class="userphoto" @click="changePhoto()" :src="token.photo" alt="">
             <p class="saludo-usuario"><strong>Bienvenid@</strong> {{token.name}}</p>
             <p class="material-symbols-sharp">person</p>
         </div>
@@ -16,13 +17,19 @@
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import VueJwtDecode from 'vue-jwt-decode'
+import axios from 'axios';
+import { API } from '../constants/constants';
 
 export default {
     data(){
       return{
         token: VueJwtDecode.decode(Cookies.get("accessToken")),
         administrator: false,
+        API_HOST_BACKEND: API.API_HOST_BACKEND
       }
+    },
+    mounted(){
+      //console.log(this.token);
     },
     created(){
       this.administrador()
@@ -47,6 +54,50 @@ export default {
         },
         administrador(){
           this.token.admin === true ? this.administrator = true : this.administrator = false ;
+        },
+        async changePhoto(){
+          
+          Swal.fire({
+  title: 'Ingresa la Url de la foto',
+  input: 'text',
+  inputAttributes: {
+    autocapitalize: 'off'
+  },
+  showCancelButton: true,
+  confirmButtonText: 'Cambiar',
+  cancelButtonText: 'Cerrar',
+  showLoaderOnConfirm: true,
+  preConfirm: (photo) => {
+    console.log(photo);
+    const data = {
+      name: this.token.name,
+      lastName: this.token.lastName,
+      admin: this.token.admin,
+      photo: photo
+    }
+    return axios.put(`${this.API_HOST_BACKEND}/user/${this.token._id}`, data, {
+        headers: {
+            authorization : Cookies.get('accessToken')
+          }})
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        Swal.showValidationMessage(
+          `Request failed: ${error.message}`
+        )
+      })
+  },
+  allowOutsideClick: () => !Swal.isLoading()
+}).then((result) => {
+  console.log("result",result);
+  if (result.isConfirmed) {
+    Swal.fire({
+      title: `¡Todo listo ${this.token.name}!`,
+      imageUrl: result.value
+    })
+  }
+})
         }
     }
   }
@@ -106,5 +157,11 @@ p{
   'wght' 800,
   'GRAD' 200,
   'opsz' 48
+}
+.userphoto{
+  width: 45px;
+  border-radius: 12px;
+  margin-right: 10px;
+  cursor: pointer;
 }
 </style>
