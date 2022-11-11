@@ -53,7 +53,7 @@ prueba tecnica fullstack MEVN
     email: maryoe_95@hotmail.com
     password : admin1234
    ```
-* para visualizar la API desplegada ingresa a : [API DEPLOY](https://musical-wisp-5ea302.netlify.app/#/homepage)
+* para visualizar la API desplegada ingresa a : [API DEPLOY](https://musical-wisp-5ea302.netlify.app/)
     
     
    
