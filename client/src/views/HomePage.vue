@@ -388,7 +388,7 @@ body{
     opacity: 1;
   }
 }
-// mensaje sin productos
+// mensaje sin productos  
 .empty-products{
   width: 100%;
   height: 100%;
