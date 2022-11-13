@@ -25,11 +25,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    date: {
-        type: Date,
-        default: Date.now()
-    }
     
-})
+}, {timestamps: true})
+
+
+// mongoose.set('useFindAndModify', false);
 
 module.exports = mongoose.model('user', userSchema)

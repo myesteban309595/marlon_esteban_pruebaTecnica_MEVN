@@ -23,7 +23,7 @@ exports.createUser = async (req,res)=> {
         }else{
             const newUser = new user({
               name: name.charAt(0).toUpperCase()+(name.slice(1)).toLowerCase(),
-              lastName: lastName.charAt(0).toUpperCase()+(name.slice(1)).toLowerCase(),
+              lastName: lastName.charAt(0).toUpperCase()+(lastName.slice(1)).toLowerCase(),
               email: email.toLowerCase(),
               password: passwordEncrypted,
             });
@@ -52,3 +52,13 @@ exports.deleteUser = async (req, res) => {
         res.json({message: error.message})
     }
 };
+
+exports.forgotPassword = async (req, res) => {
+    const {email} = req.body
+    if(!(email)){
+        return res.status(400).json('El correo es requerido')
+    }
+    const message = 'Revisa tu correo electronico'
+    let verifycationLink;
+    let emailStatus ='OK'
+}

@@ -20,7 +20,7 @@
           placeholder="Password"
         >
         <p >
-          <a class="forgot-password" href="/forgotpassword">He olvidado mi contraseña</a>
+          <a class="forgot-password" @click="forgot">He olvidado mi contraseña</a>
         </p>
         <p v-if="error" class="error">Has introducido mal el email o la contraseña.</p>
           <button class="form-submit" type="submit" value="Login"> Login</button>
@@ -47,7 +47,6 @@
       API_HOST_BACKEND : API.API_HOST_BACKEND
     }),
     mounted(){
-      console.log("proebando",this.API_HOST_BACKEND);
     },
     methods: {
       async login() {
@@ -88,6 +87,9 @@
       },
       async registrate() {
         this.$router.push("/registro");
+      },
+      async forgot() {
+        this.$router.push("/resetpassword");
       },
     }
   };

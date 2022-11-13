@@ -19,8 +19,12 @@
                 </tr>
               </tbody>
             </table>
+            <div v-if="users.length==0" class="loading">
+                  <div class="loader" ></div>
+                  <p class="message" >Loading</p>
+                </div>
+          </div>
         </div>
-      </div>
 </template>
 
 <script>
@@ -45,7 +49,6 @@ export default{
           }})
             .then(data=> {
                 this.users = data.data
-                console.log(data);
             }).catch(error=> {
               console.log(error);
             });
@@ -90,7 +93,7 @@ export default{
 }
 .scroll-users{
   margin-top: 15px;
-  margin-bottom: 10px;
+  margin-bottom: 57px;
   width: 95%;
   height: 380px;
   overflow-y: scroll;
@@ -135,13 +138,56 @@ caption {
   }
 }
 #delete{
-
   border-radius: 7px;
   margin-left: 7px;
   background-color: rgb(252, 177, 177);
   &:hover{
     cursor: pointer;
     background-color: rgb(255, 129, 129);
+  }
+}
+// estilos de carga
+.loading{
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.loading .loader{
+  position: absolute;
+  margin-left: 40%;
+  margin-top: 22%;
+  width: 80px;
+  height: 80px;
+  border: solid 5px #064555;
+  border-top: solid 5px #7cd6ec;
+  border-radius: 50%; 
+  animation: loader .8s linear infinite;;
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.loading .message{
+  font-size: 20px;
+  position: absolute;
+  color: #101e22;
+  top: 35%;
+  left: 49%;
+  transform: translate(-50%, -50%);
+  animation: message 1s alternate infinite ease-in-out;
+}
+@keyframes message {
+  0% {
+    opacity: .4;
+  }
+  100% {
+    opacity: 1;
   }
 }
 </style>

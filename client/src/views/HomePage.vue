@@ -1,21 +1,25 @@
 <template>
     <div class="home">
+
       <div>
         <ServicesNavBar token/>
       </div>
+
       <div class="container-pages">
         <div v-if="adminUser" class="page-left">
           <UsersTableData/>
-          <button v-if="administrator" @click="adminP" class="admP" >Administrar Productos</button>
+          <button v-if="administrator" @click="adminUser = null" class="admP" >Administrar Productos</button>
         </div>
+
         <div v-if="adminUser==null" class="page-left">
           <CreateProduct :update="updateProps" @escucharHijo="getProduct()"></CreateProduct>
-          <button v-if="administrator" @click="adminU" class="admU">Administrar Usuarios</button>
+          <button v-if="administrator" @click="adminUser = !adminUser" class="admU">Administrar Usuarios</button>
         </div>
+
         <div class="page-right">
           <div class="scroll-principal">   
-           <div class="products-container" v-for="(product,index) in products" :key="index">
-             <div class="productCard">
+           <div class="products-container"  v-for="(product,index) in products" :key="index">
+             <div v-if="products[0] !== 'empty'" class="productCard">
                <p class="price"><strong> Precio: </strong> {{product.price +" $"}}</p>
                <img class="image-list" :src="product.url" alt="">
                <grid class="crud-format">
@@ -36,9 +40,17 @@
                   </p>
               </div>
             </div>
+            <div v-if="products.length==0" class="loading">
+              <div class="loader" ></div>
+              <p class="message" >Loading</p>
+            </div>
+            <div class="empty-products">
+              <p v-if="products[0] === 'empty'">No tienes productos aún 🥴</p>
+            </div>
           </div>
         </div>
       </div>
+
     </div>
   </template>
 
@@ -66,7 +78,8 @@ export default {
          updateProps : null,
          adminUser : null,
          administrator: false,
-         API_HOST_BACKEND : API.API_HOST_BACKEND
+         API_HOST_BACKEND : API.API_HOST_BACKEND,
+         changestate: null
        }
     },
     created(){
@@ -84,7 +97,11 @@ export default {
           }
         })
         .then(({data})=> {
-          this.products = data.myproducts.reverse()
+          if(data.myproducts.length == 0){
+            this.products = ["empty"]
+          }else{
+            this.products = data.myproducts.reverse()
+          }
         }).catch(error=> {
           Swal.fire(error.response.data)
           .then(() => {
@@ -138,15 +155,12 @@ export default {
         }
        })
       },
-      adminU(){
-        this.adminUser = true;
-      },
-      adminP(){
-        this.adminUser = null;
-      },
       administrador(){
         console.log(this.token);
           this.token.admin === true ? this.administrator = true : this.administrator = false ;
+      },
+      changeState(){
+     
       },
    }
 }
@@ -206,7 +220,7 @@ body{
 }
 .scroll-principal{
   margin-top: 15px;
-  height: 480px;
+  height: 530px;
  overflow-y: scroll;
 }
 .container-pages{
@@ -233,8 +247,8 @@ body{
   margin: auto;
 }
 .products-container .productCard{
-  width: 300px;
-  height: 380px;
+  width: 310px;
+  height: 375px;
   border-radius: 8px;
   box-shadow: 0 3px 3px rgba(0, 0, 0, 0.721);
   overflow: hidden;
@@ -327,5 +341,64 @@ body{
   &:hover{
     background-color: rgb(211, 211, 211);
   }
+}
+
+// estilos de carga
+.loading{
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading .loader{
+  width: 100px;
+  height: 100px;
+  border: solid 5px #064555;
+  border-top: solid 5px #7cd6ec;
+  border-radius: 50%; 
+  animation: loader .8s linear infinite;;
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading .message{
+  font-size: 22px;
+  position: absolute;
+  color: #101e22;
+  top: 46%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: message 1s alternate infinite ease-in-out;
+}
+@keyframes message {
+  0% {
+    opacity: .4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+// mensaje sin productos
+.empty-products{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.empty-products p{
+  position: fixed;
+  top: 50%;
+  font-size: 28px;
 }
 </style>

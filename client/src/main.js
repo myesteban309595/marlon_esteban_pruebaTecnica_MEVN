@@ -10,6 +10,9 @@ import App from "./App";
 import PrincipalPage from './views/PrincipalPage.vue';
 import RegisterUser from './views/RegisterUser.vue';
 import HomePage from './views/HomePage.vue'
+import ResetPasswordEmail from './views/ResetPasswordEmail.vue'
+import ResetPassword from './views/ResetPassword.vue'
+import RecoveryPassword from './views/RecoveryPassword.vue'
 
 Vue.use(Router);
 
@@ -17,6 +20,9 @@ const routes = [
   { path: "/", component: PrincipalPage },
   { path: "/registro", component: RegisterUser },
   { path: "/homepage", component: HomePage },
+  { path: "/resetpassword/", component: ResetPasswordEmail },
+  { path: "/recoveryPassword/:id", component: RecoveryPassword },
+  { path: "/reset", component: ResetPassword },
 ];
 
 const router = new Router({

@@ -1,5 +1,30 @@
 <template>
     <div class="navbar-services" >
+
+        <input type="checkbox" id="btn-menu">
+        <div class="container-menu">
+          <div class="cont-menu">
+            <img class="menu-foto" :src="token.photo" alt="">
+            <nav>
+              <a href="#">Facebook</a>
+              <a href="#">Suscribirse</a>
+              <a href="#">Repositorio</a>
+              <a href="#" @click="configurations= !configutations" >Configuraciones</a>
+            </nav>
+            <label for="btn-menu" class="material-symbols-outlined">close</label> 
+            <div v-if="configurations==true" class="configuratios-options">
+              <nav>
+                <a @click="ResetPassword=!ResetPassword">Reset Password</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="ResetPassword" class="resetPassword">
+          <ResetPassword/>
+          <label @click="ResetPassword=false" class="material-symbols-outlined">close</label> 
+        </div>
+    
         <div class="navbar-services-left">
             <img class="userphoto" @click="changePhoto()" :src="token.photo" alt="">
             <p class="saludo-usuario"><strong>Bienvenid@</strong> {{token.name}}</p>
@@ -10,7 +35,10 @@
              <p v-if="!administrator" >Cliente</p>
             <button @click="logout" id="logout" class="material-symbols-sharp">logOut</button>
         </div>
-    </div>
+        <div class="btn-menu">
+          <label class="btn-menu-icon" for="btn-menu">☰</label>
+        </div>
+      </div>
 </template>
 <script>
 
@@ -19,14 +47,20 @@ import Swal from 'sweetalert2';
 import VueJwtDecode from 'vue-jwt-decode'
 import axios from 'axios';
 import { API } from '../constants/constants';
+import ResetPassword from '../views/ResetPassword.vue';
 
 export default {
     data(){
       return{
         token: VueJwtDecode.decode(Cookies.get("accessToken")),
         administrator: false,
-        API_HOST_BACKEND: API.API_HOST_BACKEND
+        API_HOST_BACKEND: API.API_HOST_BACKEND,
+        configurations: false,
+        ResetPassword: false
       }
+    },
+    components:{
+      ResetPassword
     },
     mounted(){
       //console.log(this.token);
@@ -138,7 +172,7 @@ p{
 #logout{
     width: 60px;
     height: 40px;
-    margin-right: 50px;
+    margin-right: 35px;
     margin-left: 15px;
     border-radius: 8px;
     &:hover{
@@ -164,4 +198,113 @@ p{
   margin-right: 10px;
   cursor: pointer;
 }
+
+/*Menù lateral*/
+#btn-menu{
+		display: none;
+	}
+.btn-menu  .btn-menu-icon{
+  cursor: pointer;
+  font-size: 25px;
+  margin-right: 30px;
+  color:#ffff;
+  &:hover{
+    font-size: 27px;
+    margin-right: 28px;
+  }
+}
+	.container-menu{
+		position: absolute;
+		background: rgba(0,0,0,0.2);
+		width: 100%;
+		height: 100vh;
+		top: 0;left: 0;
+		transition: all 500ms ease;
+		opacity: 0;
+		visibility: hidden;
+	}
+	#btn-menu:checked ~ .container-menu{
+		opacity: 1;
+		visibility: visible;
+	}
+	.cont-menu{
+		width: 100%;
+		max-width: 250px;
+		background: rgba(19, 35, 47, 0.9);;
+		height: 100vh;
+		position: relative;
+		transition: all 500ms ease;
+		transform: translateX(-100%);
+	}
+	#btn-menu:checked ~ .container-menu .cont-menu{
+		transform: translateX(0%);
+	}
+	.cont-menu nav{
+		transform: translateY(15%);
+	}
+	.cont-menu .menu-foto{
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    margin-top: 35px;
+    margin-left: 70px;
+  }
+	.cont-menu nav a{
+		display: block;
+		text-decoration: none;
+		padding: 20px;
+		color: #c7c7c7;
+		border-left: 5px solid transparent;
+		transition: all 400ms ease;
+	}
+	.cont-menu nav a:hover{
+		border-left: 5px solid #c7c7c7;
+		background: #524f4f;
+    font-size: 20px;
+	}
+	.cont-menu label{
+		position: absolute;
+		right:15px;
+		top: 15px;
+		color: #fff;
+		cursor: pointer;
+		font-size: 18px;
+    &:hover{
+      font-size: 20px;
+    }
+	}
+
+  .configuratios-options{
+    align-items: center;
+		position: absolute;
+		background: rgba(19, 35, 47, 0.94);;
+		width: 70%;
+    height: 13%;
+		top: 340px;left: 270px;
+		transition: all 500ms ease;
+    opacity: 1;
+		visibility: visible;
+	}
+	/*Fin de Menù lateral*/
+
+  .resetPassword{
+    position: absolute;
+    top: 0;
+    padding: 15px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    background: rgba(80, 117, 143, 0.863);;
+  }
+  .resetPassword label{
+    top: 20px;
+    right: 25px;
+    position: absolute;
+    cursor: pointer;
+    &:hover{
+      font-size: 28px;
+    }
+  }
 </style>
