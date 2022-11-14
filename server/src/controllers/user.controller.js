@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose')
+const {ObjectId} = mongoose.Types.ObjectId
 
 const user = require('../models/user.model')
 
@@ -61,4 +62,48 @@ exports.forgotPassword = async (req, res) => {
     const message = 'Revisa tu correo electronico'
     let verifycationLink;
     let emailStatus ='OK'
+}
+
+exports.resetPassword = async (req, res) => {
+     const { password, newPassword } = req.body;
+     const {id} = req.params;
+     const savedUser = await user.findOne({_id:id})
+         try {
+             if(bcrypt.compare(password, savedUser.password)){
+                await user.updateOne({_id:id}, {$set : {"password" : await bcrypt.hash(newPassword, 10)}})
+                 .then(()=> {
+                     res.status(200).json('Se ha cambiado su contraseña Inicie sesión nuevamente') 
+                 })
+                }else {
+                    return res.status(422).json("Contraseña incorrecta");
+                }
+            } catch (error) {
+                console.log(error);
+                res.json(error)
+            }
+};
+
+exports.changePhoto = async (req, res) => {
+    const {photo} = req.body
+    const {id} = req.params
+
+    const data = await user.findOne({_id:id})
+    await user.updateOne({_id:id}, {$set:{"photo": photo}})
+    .then((response)=> {
+        res.status(200).json(data)
+    })
+    .catch(error=> {
+        console.log(error);
+    })
+}
+exports.getPhoto = async (req, res) => {
+    const {id} = req.params
+
+   await user.findOne({_id:id})
+    .then((data)=> {
+        res.status(200).json(data)
+    })
+    .catch(error=> {
+        console.log(error);
+    })
 }

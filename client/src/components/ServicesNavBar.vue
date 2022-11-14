@@ -4,11 +4,11 @@
         <input type="checkbox" id="btn-menu">
         <div class="container-menu">
           <div class="cont-menu">
-            <img class="menu-foto" :src="token.photo" alt="">
+            <img class="menu-foto" :src="data.photo" alt="">
             <nav>
               <a href="#">Facebook</a>
               <a href="#">Suscribirse</a>
-              <a href="#">Repositorio</a>
+              <a href="https://github.com/myesteban309595/marlon_esteban_pruebaTecnica_MEVN">Repositorio</a>
               <a href="#" @click="configurations= !configutations" >Configuraciones</a>
             </nav>
             <label for="btn-menu" class="material-symbols-outlined">close</label> 
@@ -26,7 +26,7 @@
         </div>
     
         <div class="navbar-services-left">
-            <img class="userphoto" @click="changePhoto()" :src="token.photo" alt="">
+            <img class="userphoto" @click="changePhoto()" :src="data.photo" alt="">
             <p class="saludo-usuario"><strong>Bienvenid@</strong> {{token.name}}</p>
             <p class="material-symbols-sharp">person</p>
         </div>
@@ -56,7 +56,9 @@ export default {
         administrator: false,
         API_HOST_BACKEND: API.API_HOST_BACKEND,
         configurations: false,
-        ResetPassword: false
+        ResetPassword: false,
+        photo : "",
+        data: {}
       }
     },
     components:{
@@ -67,8 +69,22 @@ export default {
     },
     created(){
       this.administrador()
+      this.getUsers()
     },
     methods: {
+      async getUsers(){
+            axios.get(`${this.API_HOST_BACKEND}/user/getphoto/${this.token._id}`, {
+        headers: {
+            authorization : Cookies.get('accessToken')
+          }})
+            .then(({data})=> {
+              console.log("data", data);  
+              this.data = data
+            }).catch(error=> {
+              console.log(error);
+            });
+
+        },
         logout(){
          Swal.fire({
           icon: "question",
@@ -90,49 +106,52 @@ export default {
           this.token.admin === true ? this.administrator = true : this.administrator = false ;
         },
         async changePhoto(){
-          
           Swal.fire({
-  title: 'Ingresa la Url de la foto',
-  input: 'text',
-  inputAttributes: {
-    autocapitalize: 'off'
-  },
-  showCancelButton: true,
-  confirmButtonText: 'Cambiar',
-  cancelButtonText: 'Cerrar',
-  showLoaderOnConfirm: true,
-  preConfirm: (photo) => {
-    console.log(photo);
-    const data = {
-      name: this.token.name,
-      lastName: this.token.lastName,
-      admin: this.token.admin,
-      photo: photo
-    }
-    return axios.put(`${this.API_HOST_BACKEND}/user/${this.token._id}`, data, {
-        headers: {
-            authorization : Cookies.get('accessToken')
-          }})
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(error => {
-        Swal.showValidationMessage(
-          `Request failed: ${error.message}`
-        )
-      })
-  },
-  allowOutsideClick: () => !Swal.isLoading()
-}).then((result) => {
-  console.log("result",result);
-  if (result.isConfirmed) {
-    Swal.fire({
-      title: `¡Todo listo ${this.token.name}!`,
-      imageUrl: result.value
-    })
-  }
-})
-        }
+           title: 'Ingresa la Url de la foto',
+           input: 'text',
+           inputAttributes: {
+             autocapitalize: 'off'
+           },
+           inputPlaceholder: "http or https format images",
+           showCancelButton: true,
+           confirmButtonText: 'Cambiar',
+           cancelButtonText: 'Cerrar',
+           showLoaderOnConfirm: true,
+            preConfirm: (photo) => {
+             console.log(photo);
+             const data = { 
+               photo: photo
+             }
+             if(photo.startsWith('http')){       
+               return axios.patch(`${this.API_HOST_BACKEND}/user/changephoto/${this.token._id}`, data, {
+                 headers: {
+                     authorization : Cookies.get('accessToken')
+                  }})
+                 .then(response => {
+                   console.log(response.data);
+                   this.photo = response.data.photo
+                 })
+                 .catch(error => {
+                  Swal.showValidationMessage(
+                 `Request failed: ${error.message}`
+                  )
+                 })
+             }else {
+              Swal.fire('El formato de la imagen debe ser http o https')
+             }
+            },
+              allowOutsideClick: () => !Swal.isLoading()
+          }).then((result) => {
+           if (result.isConfirmed && this.photo.startsWith('http')) {
+             Swal.fire({
+              title: `¡Todo listo ${this.token.name}!`,
+              imageUrl: result.value
+              })
+             }else{
+              Swal.fire('El formato de la imagen debe ser http o https')
+             }
+           })
+       }
     }
   }
 </script>
@@ -280,7 +299,7 @@ p{
 		background: rgba(19, 35, 47, 0.94);;
 		width: 70%;
     height: 13%;
-		top: 340px;left: 270px;
+		top: 340px;left: 255px;
 		transition: all 500ms ease;
     opacity: 1;
 		visibility: visible;
@@ -290,7 +309,7 @@ p{
   .resetPassword{
     position: absolute;
     top: 0;
-    padding: 15px;
+    padding: 12px;
     width: 100%;
     height: 100%;
     display: flex;

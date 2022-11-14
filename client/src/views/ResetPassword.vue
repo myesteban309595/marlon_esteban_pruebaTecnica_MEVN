@@ -2,11 +2,11 @@
       <form action class="form" @submit.prevent="resetSendEmail">
         <h1 class="title">Reestablecer contraseña</h1>
         <label class="form-label" for="#password">Actual Password</label>
-         <input v-model="password" class="form-input" type="password" id="password" required placeholder="password">
+         <input v-model="password" class="form-input" type="password" id="actualpassword" required placeholder="password">
         <label class="form-label" for="#password">New Password</label>
-         <input v-model="password" class="form-input" type="password" id="password" required placeholder="password">
+         <input v-model="newpassword" class="form-input" type="password" id="newpassword" required placeholder="password">
         <label class="form-label" for="#password">Repeat Password</label>
-         <input v-model="repeatpassword" class="form-input" type="password" id="password" required placeholder="password">
+         <input v-model="repeatpassword" class="form-input" type="password" id="repeatpassword" required placeholder="password">
 
         <button class="form-submit" type="submit" value=""> Enviar</button>
       </form>
@@ -15,14 +15,15 @@
   <script>
   import axios from 'axios';
   import Swal from 'sweetalert2';
-  //import VueJwtDecode from 'vue-jwt-decode'
-  //import Cookies from 'js-cookie';
+  import VueJwtDecode from 'vue-jwt-decode'
+  import Cookies from 'js-cookie';
   import { API } from '../constants/constants';
 
   export default {
     data: () => ({
-      email: "",
+      token: VueJwtDecode.decode(Cookies.get("accessToken")),
       password: "",
+      newpassword: "",
       repeatpassword: "",
       API_HOST_BACKEND : API.API_HOST_BACKEND,
       setEmailSent: false
@@ -34,15 +35,25 @@
         try {
           const API_HOST_BACKEND = this.API_HOST_BACKEND
           const body = {
-            email: this.email 
+            id: this.token._id,
+            email: this.token.email,
+            password: this.password,
+            newPassword: this.newpassword,
            }
-          await axios.patch(`${API_HOST_BACKEND}/user/forgot`, body)
-          .then(() => {
-          })
-          .catch(error => {
-            console.log(error);
-            Swal.fire(error.response.data)
-          })
+           if(this.newpassword === this.repeatpassword)
+           {
+             await axios.patch(`${API_HOST_BACKEND}/user/reset/${this.token._id}`, body)
+             .then((result) => {
+               Swal.fire(result.data)
+               .then(this.$router.push('/'))
+             })
+             .catch(error => {
+               console.log(error);
+               Swal.fire(error.response.data)
+             })
+           }else{
+             Swal.fire('Las contraseñas no cohinciden 🤕')
+           }
         }catch (error) {
           console.log(error);
         }
@@ -71,7 +82,7 @@
     height: 470px;
     min-width: 280px;
     max-width: 100%;
-    background: rgba(19, 35, 47, 0.9);
+    background: rgba(19, 35, 47, 1);
     border-radius: 5px;
     padding: 50px;
     box-shadow: 0 4px 10px 4px rgba(0, 0, 0, 0.3);

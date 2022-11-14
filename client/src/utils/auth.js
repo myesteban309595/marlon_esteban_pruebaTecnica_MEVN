@@ -14,7 +14,6 @@ export default {
  initAxiosInterceptors(){
   Axios.interceptors.request.use(function(config){
     const token =Cookies.get('accessToken');
-    console.log(token);
     if(token){
       config.headers.Authorization = `bearer ${token}`
     }
@@ -57,7 +56,6 @@ export default {
     return await axios.post(`${ENDPOINT_PATH}/login`, user)
     .then(data => {
       const token = data.data.token
-      console.log(token);
     })
     .catch(error=> {
       swal.fire(error.response.data)

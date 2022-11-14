@@ -63,7 +63,7 @@ import Cookies from 'js-cookie';
 import VueJwtDecode from 'vue-jwt-decode'
 import UsersTableData from '@/components/UsersTableData.vue';
 
-import { API } from '../constants/constants';
+import { API } from '../constants/constants.js';
 
 export default {
     components: {
@@ -103,7 +103,7 @@ export default {
             this.products = data.myproducts.reverse()
           }
         }).catch(error=> {
-          Swal.fire(error.response.data)
+          Swal.fire(error.message)
           .then(() => {
             Cookies.remove('accessToken')
             this.$router.push("/")
@@ -388,7 +388,7 @@ body{
     opacity: 1;
   }
 }
-// mensaje sin productos  
+// mensaje sin productos
 .empty-products{
   width: 100%;
   height: 100%;
@@ -397,7 +397,7 @@ body{
   align-items: center;
 }
 .empty-products p{
-  position: fixed;
+  position: absolute;
   top: 50%;
   font-size: 28px;
 }

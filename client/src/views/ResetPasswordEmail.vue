@@ -13,7 +13,7 @@
           >  
             <button class="form-submit" type="submit" value=""> Enviar</button>
           </form>
-          <button class="form-submit" @click="BackHome" value=""> Volver</button>
+          <button id="back-home" @click="BackHome"> Volver</button>
         <p v-if="setEmailSent===true">Ingresa a tu cuenta y confirma</p>
     </div>
   </template>
@@ -82,12 +82,12 @@
     flex-direction: column;
     justify-content: center;
     width: 20%;
-    height: 270px;
+    height: 50%;
     min-width: 280px;
     max-width: 100%;
     background: rgba(19, 35, 47, 0.9);
     border-radius: 5px;
-    padding: 50px;
+    padding: 55px;
     box-shadow: 0 4px 10px 4px rgba(0, 0, 0, 0.3);
   }
   .form-label {
@@ -128,5 +128,25 @@
     }
   }
  
+  #back-home{
+    position: absolute;
+    width: 20.5%;
+    top: 70%;
+    background:  #2e8297;
+    border: none;
+    color: white;
+    font-size: 15px;
+    letter-spacing: 1px;
+    margin-top: 1rem;
+    padding: 1rem 0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+    &:hover {
+      background: #2786b3;
+      color: aliceblue;
+      box-shadow: 0 0 5px #14a9ff
+    }
+  }
   </style>
   

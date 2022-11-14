@@ -27,9 +27,9 @@ exports.login = async (req,res)=> {
                     name: savedUser.name,
                     lastName: savedUser.lastName,
                     admin: savedUser.admin,
-                    photo: savedUser.photo,email
+                    photo: savedUser.photo,
+                    email: savedUser.email
                 },process.env.JWT_SECRET);
-                console.log(token);
                 res.header('auth-token', token).json({data: {token}});  
             }else {
                 return res.status(422).json("Correo o contraseña incorrectos");
