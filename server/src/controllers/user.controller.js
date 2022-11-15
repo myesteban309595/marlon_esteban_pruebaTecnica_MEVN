@@ -1,6 +1,9 @@
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
 const {ObjectId} = mongoose.Types.ObjectId
+const sendMail = require('../utils/sendEmail');
 
 const user = require('../models/user.model')
 
@@ -18,9 +21,9 @@ exports.createUser = async (req,res)=> {
     if(!name || !lastName || !email || !password){
         res.status(404).json('Ingrese informacion válida');
     }else{
-        const validateUserExist = await user.findOne({email});
+        const validateUserExist = await user.findOne({email:email});
         if(validateUserExist){
-            res.status(404).json('El usuario ya existe');
+            res.status(404).json('Este email ya existe');
         }else{
             const newUser = new user({
               name: name.charAt(0).toUpperCase()+(name.slice(1)).toLowerCase(),
@@ -37,7 +40,7 @@ exports.createUser = async (req,res)=> {
 exports.editUser = async (req, res) => {
     try{
         const {_id} = req.params
-        const updatedUser = await user.updateOne({_id:_id}, req.body)
+        await user.updateOne({_id:_id}, req.body)
         .then(()=>res.json("Usuario actualizado"))
     } catch(error) {
         res.json({message: error.message})
@@ -46,7 +49,7 @@ exports.editUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
     try{
-        const {id} = req.params
+      const {id} = req.params
       await user.deleteOne({_id:id})
         .then(()=> res.json("Se ha eliminado el usuario"))
     } catch(error) {
@@ -58,10 +61,14 @@ exports.forgotPassword = async (req, res) => {
     const {email} = req.body
     if(!(email)){
         return res.status(400).json('El correo es requerido')
+    }else{
+        const code = crypto.randomBytes(15).toString('hex');
+        const token = jwt.sign({
+            email: email
+        },process.env.JWT_SECRET);
+        //sendMail(email,code);
+        res.status(200).json({token})
     }
-    const message = 'Revisa tu correo electronico'
-    let verifycationLink;
-    let emailStatus ='OK'
 }
 
 exports.resetPassword = async (req, res) => {

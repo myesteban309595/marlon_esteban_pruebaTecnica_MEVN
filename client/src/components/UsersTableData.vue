@@ -58,9 +58,8 @@ export default{
         headers: {
             authorization : Cookies.get('accessToken')
           }})
-          .then(data=> {
+          .then(()=> {
             this.getUsers()
-            console.log(data);
           }).catch(error=> {
               this.getUsers()
               console.log(error);

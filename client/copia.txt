@@ -16,8 +16,6 @@ const routes = [
     {path: "/homepage", component: HomePage},
 ]
 
-console.log("rutas ejecutandose");
-
 const router = new Router({
     routes,
     mode: 'history'

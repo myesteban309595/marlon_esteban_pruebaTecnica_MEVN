@@ -59,7 +59,6 @@ route.put('/edit/:id', requireLogin, (req, res) => {
         const {id} = req.params
         const updateProduct = product.updateOne({_id:id}, req.body)
         .then(()=>res.json("Se ha actualizado el producto correctamente"))
-        console.log("producto actualizado: ", updateProduct);
     } catch(error) {
         res.json({message: error.message})
     }

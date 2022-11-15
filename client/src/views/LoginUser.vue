@@ -77,8 +77,8 @@
             }
           })
           .catch(error => {
-            console.log(error);
-            Swal.fire(error.response.data)
+            console.log("error:",error);
+            Swal.fire(error.response)
           })
          
         }catch (error) {

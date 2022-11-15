@@ -14,7 +14,7 @@
             <button class="form-submit" type="submit" value=""> Enviar</button>
           </form>
           <button id="back-home" @click="BackHome"> Volver</button>
-        <p v-if="setEmailSent===true">Ingresa a tu cuenta y confirma</p>
+        <p v-if="setEmailSent===true">Ingresa a tu cuenta y confirma 📧</p>
     </div>
   </template>
   
@@ -22,7 +22,7 @@
   import axios from 'axios';
   import Swal from 'sweetalert2';
   //import VueJwtDecode from 'vue-jwt-decode'
-  //import Cookies from 'js-cookie';
+  import Cookies from 'js-cookie';
   import { API } from '../constants/constants';
 
   export default {
@@ -43,7 +43,9 @@
             email: this.email 
            }
           await axios.post(`${API_HOST_BACKEND}/user/forgot`, body)
-          .then(() => {
+          .then(({data}) => {
+            console.log("dataaa:", data.token);
+            Cookies.set('verificationToken', data.token)
             this.setEmailSent = true ;           
           })
           .catch(error => {

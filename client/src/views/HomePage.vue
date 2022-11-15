@@ -87,7 +87,7 @@ export default {
       this.administrador()
     },
     mounted(){
-      console.log("API_HOST_BACKEND", this.API_HOST_BACKEND);
+      //console.log("API_HOST_BACKEND", this.API_HOST_BACKEND);
     },
     methods:{
       getProduct(){
@@ -139,13 +139,12 @@ export default {
             authorization : Cookies.get('accessToken')
           }
         })
-        .then(data=> {
+        .then(()=> {
           Swal.fire(
             '¡Eliminado!',
             'El producto ha sido eliminado'
             )
           this.getProduct();
-          console.log("eliminar:",data);
         })
         .catch(error=> {
           Cookies.remove('accessToken')
@@ -156,7 +155,6 @@ export default {
        })
       },
       administrador(){
-        console.log(this.token);
           this.token.admin === true ? this.administrator = true : this.administrator = false ;
       },
       changeState(){

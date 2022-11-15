@@ -22,7 +22,6 @@ export default {
  },
   addProduct(name, price, qualification, url){
     const product = {name, price, qualification, url}
-    console.log(product);
     return axios.post(`${ENDPOINT_PATH}/product/createProduct`, product)
     .then(
       swal.fire("Se ha añadido un Nuevo producto")

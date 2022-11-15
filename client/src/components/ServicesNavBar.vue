@@ -65,7 +65,6 @@ export default {
       ResetPassword
     },
     mounted(){
-      //console.log(this.token);
     },
     created(){
       this.administrador()
@@ -78,7 +77,6 @@ export default {
             authorization : Cookies.get('accessToken')
           }})
             .then(({data})=> {
-              console.log("data", data);  
               this.data = data
             }).catch(error=> {
               console.log(error);
@@ -118,24 +116,31 @@ export default {
            cancelButtonText: 'Cerrar',
            showLoaderOnConfirm: true,
             preConfirm: (photo) => {
-             console.log(photo);
              const data = { 
                photo: photo
              }
-             if(photo.startsWith('http')){       
-               return axios.patch(`${this.API_HOST_BACKEND}/user/changephoto/${this.token._id}`, data, {
-                 headers: {
-                     authorization : Cookies.get('accessToken')
-                  }})
-                 .then(response => {
-                   console.log(response.data);
-                   this.photo = response.data.photo
-                 })
-                 .catch(error => {
-                  Swal.showValidationMessage(
-                 `Request failed: ${error.message}`
-                  )
-                 })
+             if(photo.startsWith('http')){     
+               if(photo.include('encrypted')){
+                 return axios.patch(`${this.API_HOST_BACKEND}/user/changephoto/${this.token._id}`, data, {
+                   headers: {
+                       authorization : Cookies.get('accessToken')
+                    }})
+                   .then(response => {
+                     this.photo = response.data.photo
+                   })
+                   .catch(error => {
+                    Swal.showValidationMessage(
+                   `Request failed: ${error.message}`
+                    )
+                   })
+               }else{
+                Swal.fire({
+                  title: 'Imagen esta encriptada',
+                  icon: "error",
+                  confirmButtonText: "Aceptar",
+                  confirmButtonColor: "#3085d6",
+                })
+               }  
              }else {
               Swal.fire('El formato de la imagen debe ser http o https')
              }

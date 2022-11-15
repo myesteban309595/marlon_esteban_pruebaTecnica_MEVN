@@ -83,20 +83,24 @@
                 authorization : Cookies.get('accessToken')
              }
             })
-            .then(
+            .then(()=> {
               Swal.fire({
                 icon: 'success',
                 title: "Registro Exitoso",
                 confirmButtonText: "Aceptar",
                 confirmButtonColor: "#3085d6",
               })
-              .then((confirm)=>{
-                console.log(confirm);
+              .then(()=>{
                 this.$router.push("/")
               })
-              )
+            })
               .catch(error=> {
-              console.log(error);
+                console.log(error);
+                Swal.fire({
+                  icon: "warning",
+                  title: error.response.data,
+                  confirmButtonText: "Entendido",
+                })
               }) 
           }else{
             Swal.fire({

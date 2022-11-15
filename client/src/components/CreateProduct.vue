@@ -95,7 +95,6 @@ import { API } from '../constants/constants';
                 location.reload()
               })
              .catch(error=> {
-                console.log(error);
                Swal.fire(error.request.statusText)
               })
             });

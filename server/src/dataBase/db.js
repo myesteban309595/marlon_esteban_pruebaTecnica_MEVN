@@ -9,7 +9,6 @@ const DB_CREDENTIALS_USER = config.module.DB_CREDENTIALS_USER;
 
 const DB_URL_CONNECTION = `mongodb+srv://${DB_CREDENTIALS_USER}:${DB_CREDENTIALS_PASSWORD}@cluster0.groubjk.mongodb.net/?retryWrites=true&w=majority` ;
 
-console.log(DB_URL_CONNECTION);
 (async()=>{
     await mongoose.connect(DB_URL_CONNECTION,{
         useNewUrlParser: true, 
